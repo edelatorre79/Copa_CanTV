@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>3ra Copa CANTV — Posiciones</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica,Arial,sans-serif;padding-bottom:40px}
+.hero{background:linear-gradient(135deg,#0d1e3a,#071020);border-bottom:3px solid #c9a84c;padding:20px;text-align:center}
+.hero h1{font-size:26px;font-weight:900;color:#fff;letter-spacing:2px}
+.hero h2{font-size:13px;color:#c9a84c;letter-spacing:4px;margin-top:4px}
+.updated{font-size:10px;color:rgba(255,255,255,.3);margin-top:6px;letter-spacing:1px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(480px,1fr));gap:20px;max-width:1200px;margin:20px auto;padding:0 16px}
+.group-block{background:#0d1e3a;border:1px solid rgba(201,168,76,.25);border-radius:10px;overflow:hidden}
+.group-title{background:#c9a84c;color:#07111f;font-size:14px;font-weight:900;letter-spacing:3px;padding:8px 14px;text-align:center}
+.standings-table{width:100%;border-collapse:collapse;font-size:12px}
+.standings-table th{background:rgba(201,168,76,.12);color:rgba(201,168,76,.8);font-size:10px;letter-spacing:1px;padding:6px 6px;text-align:center;border-bottom:1px solid rgba(201,168,76,.2)}
+.standings-table td{padding:7px 6px;text-align:center;border-bottom:1px solid rgba(255,255,255,.05)}
+.t-team{text-align:left!important;padding-left:10px!important;min-width:130px;font-weight:600}
+.t-pts{font-weight:900;color:#c9a84c!important;font-size:14px!important}
+.t-player{text-align:left!important;font-size:11px;color:rgba(255,255,255,.6);min-width:120px}
+.flag{margin-right:5px}
+.pos{color:#4ade80;font-weight:700}
+.neg{color:#f87171;font-weight:700}
+.row:hover td{background:rgba(201,168,76,.06)}
+.qualify td{border-left:2px solid transparent}
+.first td{border-left:2px solid #ffd700}
+.second td{border-left:2px solid rgba(255,215,0,.4)}
+.console-dot{font-size:8px;font-weight:800;padding:1px 4px;border-radius:3px;margin-right:4px;font-family:monospace;color:#fff}
+.footer{text-align:center;color:rgba(255,255,255,.15);font-size:10px;margin-top:24px;letter-spacing:1px}
+@media(max-width:520px){.grid{grid-template-columns:1fr}.t-player{display:none}}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div style="font-size:11px;letter-spacing:3px;color:rgba(201,168,76,.7);margin-bottom:4px">FIFA WORLD CUP 2026</div>
+  <h1>3RA COPA CANTV</h1>
+  <h2>TABLA DE POSICIONES</h2>
+  <div class="updated">Actualizado: 14/6/2026, 11:49:21 p.m.</div>
+</div>
+<div class="grid">
+    <div class="group-block">
+      <div class="group-title">GRUPO A</div>
+      <table class="standings-table">
+        <thead><tr>
+          <th class="t-team">SELECCIÓN</th>
+          <th>PJ</th><th>G</th><th>E</th><th>P</th>
+          <th>GF</th><th>GC</th><th>DIF</th><th class="t-pts">PTS</th>
+          <th class="t-player">JUGADOR</th>
+        </tr></thead>
+        <tbody>
+          <tr class="row qualify first">
+              <td class="t-team"><span class="flag">🇰🇷</span>Corea del Sur</td>
+              <td>1</td><td>1</td><td>0</td><td>0</td>
+              <td>11</td><td>3</td>
+              <td class="pos">+8</td>
+              <td class="t-pts">3</td>
+              <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span>ROGER</td>
+            </tr><tr class="row qualify second">
+              <td class="t-team"><span class="flag">🇿🇦</span>Sudáfrica</td>
+              <td>1</td><td>1</td><td>0</td><td>0</td>
+              <td>7</td><td>3</td>
+              <td class="pos">+4</td>
+              <td class="t-pts">3</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>ADRIÁN</td>
+            </tr><tr class="row  ">
+              <td class="t-team"><span class="flag">🇲🇽</span>México</td>
+              <td>1</td><td>0</td><td>0</td><td>1</td>
+              <td>3</td><td>7</td>
+              <td class="neg">-4</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>CIRO</td>
+            </tr><tr class="row  ">
+              <td class="t-team"><span class="flag">🇨🇿</span>Rep. Checa</td>
+              <td>1</td><td>0</td><td>0</td><td>1</td>
+              <td>3</td><td>11</td>
+              <td class="neg">-8</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span>MATEO</td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="group-block">
+      <div class="group-title">GRUPO B</div>
+      <table class="standings-table">
+        <thead><tr>
+          <th class="t-team">SELECCIÓN</th>
+          <th>PJ</th><th>G</th><th>E</th><th>P</th>
+          <th>GF</th><th>GC</th><th>DIF</th><th class="t-pts">PTS</th>
+          <th class="t-player">JUGADOR</th>
+        </tr></thead>
+        <tbody>
+          <tr class="row qualify first">
+              <td class="t-team"><span class="flag">🇧🇦</span>Bosnia</td>
+              <td>0</td><td>0</td><td>0</td><td>0</td>
+              <td>0</td><td>0</td>
+              <td class="">0</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>JOSSUA</td>
+            </tr><tr class="row qualify second">
+              <td class="t-team"><span class="flag">🇨🇦</span>Canadá</td>
+              <td>0</td><td>0</td><td>0</td><td>0</td>
+              <td>0</td><td>0</td>
+              <td class="">0</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>RAFAEL</td>
+            </tr><tr class="row  ">
+              <td class="t-team"><span class="flag">🇶🇦</span>Qatar</td>
+              <td>0</td><td>0</td><td>0</td><td>0</td>
+              <td>0</td><td>0</td>
+              <td class="">0</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>MATÍAS</td>
+            </tr><tr class="row  ">
+              <td class="t-team"><span class="flag">🇨🇭</span>Suiza</td>
+              <td>0</td><td>0</td><td>0</td><td>0</td>
+              <td>0</td><td>0</td>
+              <td class="">0</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span>JESUS</td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="group-block">
+      <div class="group-title">GRUPO C</div>
+      <table class="standings-table">
+        <thead><tr>
+          <th class="t-team">SELECCIÓN</th>
+          <th>PJ</th><th>G</th><th>E</th><th>P</th>
+          <th>GF</th><th>GC</th><th>DIF</th><th class="t-pts">PTS</th>
+          <th class="t-player">JUGADOR</th>
+        </tr></thead>
+        <tbody>
+          <tr class="row qualify first">
+              <td class="t-team"><span class="flag">🇧🇷</span>Brasil</td>
+              <td>0</td><td>0</td><td>0</td><td>0</td>
+              <td>0</td><td>0</td>
+              <td class="">0</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>ELIO</td>
+            </tr><tr class="row qualify second">
+              <td class="t-team"><span class="flag">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>Escocia</td>
+              <td>0</td><td>0</td><td>0</td><td>0</td>
+              <td>0</td><td>0</td>
+              <td class="">0</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>BENJAMIN</td>
+            </tr><tr class="row  ">
+              <td class="t-team"><span class="flag">🇭🇹</span>Haití</td>
+              <td>0</td><td>0</td><td>0</td><td>0</td>
+              <td>0</td><td>0</td>
+              <td class="">0</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>RAFAEL</td>
+            </tr><tr class="row  ">
+              <td class="t-team"><span class="flag">🇲🇦</span>Marruecos</td>
+              <td>0</td><td>0</td><td>0</td><td>0</td>
+              <td>0</td><td>0</td>
+              <td class="">0</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>ADRIÁN</td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="group-block">
+      <div class="group-title">GRUPO D</div>
+      <table class="standings-table">
+        <thead><tr>
+          <th class="t-team">SELECCIÓN</th>
+          <th>PJ</th><th>G</th><th>E</th><th>P</th>
+          <th>GF</th><th>GC</th><th>DIF</th><th class="t-pts">PTS</th>
+          <th class="t-player">JUGADOR</th>
+        </tr></thead>
+        <tbody>
+          <tr class="row qualify first">
+              <td class="t-team"><span class="flag">🇺🇸</span>EE.UU.</td>
+              <td>1</td><td>1</td><td>0</td><td>0</td>
+              <td>3</td><td>2</td>
+              <td class="pos">+1</td>
+              <td class="t-pts">3</td>
+              <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span>JESUS</td>
+            </tr><tr class="row qualify second">
+              <td class="t-team"><span class="flag">🇦🇺</span>Australia</td>
+              <td>0</td><td>0</td><td>0</td><td>0</td>
+              <td>0</td><td>0</td>
+              <td class="">0</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>JOSSUA</td>
+            </tr><tr class="row  ">
+              <td class="t-team"><span class="flag">🇹🇷</span>Turquía</td>
+              <td>0</td><td>0</td><td>0</td><td>0</td>
+              <td>0</td><td>0</td>
+              <td class="">0</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>JABY</td>
+            </tr><tr class="row  ">
+              <td class="t-team"><span class="flag">🇵🇾</span>Paraguay</td>
+              <td>1</td><td>0</td><td>0</td><td>1</td>
+              <td>2</td><td>3</td>
+              <td class="neg">-1</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>ELIO</td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="group-block">
+      <div class="group-title">GRUPO E</div>
+      <table class="standings-table">
+        <thead><tr>
+          <th class="t-team">SELECCIÓN</th>
+          <th>PJ</th><th>G</th><th>E</th><th>P</th>
+          <th>GF</th><th>GC</th><th>DIF</th><th class="t-pts">PTS</th>
+          <th class="t-player">JUGADOR</th>
+        </tr></thead>
+        <tbody>
+          <tr class="row qualify first">
+              <td class="t-team"><span class="flag">🇨🇮</span>Costa de Marfil</td>
+              <td>3</td><td>3</td><td>0</td><td>0</td>
+              <td>11</td><td>1</td>
+              <td class="pos">+10</td>
+              <td class="t-pts">9</td>
+              <td class="t-player"><span class="console-dot" style="background:#555555">N/A</span>JOSTHYN</td>
+            </tr><tr class="row qualify second">
+              <td class="t-team"><span class="flag">🇨🇼</span>Curazao</td>
+              <td>2</td><td>1</td><td>0</td><td>1</td>
+              <td>4</td><td>7</td>
+              <td class="neg">-3</td>
+              <td class="t-pts">3</td>
+              <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span>ROGER</td>
+            </tr><tr class="row  ">
+              <td class="t-team"><span class="flag">🇩🇪</span>Alemania</td>
+              <td>2</td><td>0</td><td>0</td><td>2</td>
+              <td>3</td><td>6</td>
+              <td class="neg">-3</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#555555">N/A</span>JONATHAN</td>
+            </tr><tr class="row  ">
+              <td class="t-team"><span class="flag">🇪🇨</span>Ecuador</td>
+              <td>1</td><td>0</td><td>0</td><td>1</td>
+              <td>1</td><td>5</td>
+              <td class="neg">-4</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span>MATEO</td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="group-block">
+      <div class="group-title">GRUPO F</div>
+      <table class="standings-table">
+        <thead><tr>
+          <th class="t-team">SELECCIÓN</th>
+          <th>PJ</th><th>G</th><th>E</th><th>P</th>
+          <th>GF</th><th>GC</th><th>DIF</th><th class="t-pts">PTS</th>
+          <th class="t-player">JUGADOR</th>
+        </tr></thead>
+        <tbody>
+          <tr class="row qualify first">
+              <td class="t-team"><span class="flag">🇸🇪</span>Suecia</td>
+              <td>3</td><td>2</td><td>0</td><td>1</td>
+              <td>10</td><td>9</td>
+              <td class="pos">+1</td>
+              <td class="t-pts">6</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>EDUARDO</td>
+            </tr><tr class="row qualify second">
+              <td class="t-team"><span class="flag">🇳🇱</span>Países Bajos</td>
+              <td>1</td><td>1</td><td>0</td><td>0</td>
+              <td>6</td><td>1</td>
+              <td class="pos">+5</td>
+              <td class="t-pts">3</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>MATÍAS</td>
+            </tr><tr class="row  ">
+              <td class="t-team"><span class="flag">🇯🇵</span>Japón</td>
+              <td>1</td><td>0</td><td>0</td><td>1</td>
+              <td>3</td><td>5</td>
+              <td class="neg">-2</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span>MATEO</td>
+            </tr><tr class="row  ">
+              <td class="t-team"><span class="flag">🇹🇳</span>Túnez</td>
+              <td>1</td><td>0</td><td>0</td><td>1</td>
+              <td>0</td><td>4</td>
+              <td class="neg">-4</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#555555">N/A</span>JONATHAN</td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="group-block">
+      <div class="group-title">GRUPO G</div>
+      <table class="standings-table">
+        <thead><tr>
+          <th class="t-team">SELECCIÓN</th>
+          <th>PJ</th><th>G</th><th>E</th><th>P</th>
+          <th>GF</th><th>GC</th><th>DIF</th><th class="t-pts">PTS</th>
+          <th class="t-player">JUGADOR</th>
+        </tr></thead>
+        <tbody>
+          <tr class="row qualify first">
+              <td class="t-team"><span class="flag">🇧🇪</span>Bélgica</td>
+              <td>0</td><td>0</td><td>0</td><td>0</td>
+              <td>0</td><td>0</td>
+              <td class="">0</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span>ROGER</td>
+            </tr><tr class="row qualify second">
+              <td class="t-team"><span class="flag">🇪🇬</span>Egipto</td>
+              <td>0</td><td>0</td><td>0</td><td>0</td>
+              <td>0</td><td>0</td>
+              <td class="">0</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#555555">N/A</span>JONATHAN</td>
+            </tr><tr class="row  ">
+              <td class="t-team"><span class="flag">🇮🇷</span>Irán</td>
+              <td>0</td><td>0</td><td>0</td><td>0</td>
+              <td>0</td><td>0</td>
+              <td class="">0</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#333333">PC</span>JAVIER</td>
+            </tr><tr class="row  ">
+              <td class="t-team"><span class="flag">🇳🇿</span>Nueva Zelanda</td>
+              <td>0</td><td>0</td><td>0</td><td>0</td>
+              <td>0</td><td>0</td>
+              <td class="">0</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>JABY</td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="group-block">
+      <div class="group-title">GRUPO H</div>
+      <table class="standings-table">
+        <thead><tr>
+          <th class="t-team">SELECCIÓN</th>
+          <th>PJ</th><th>G</th><th>E</th><th>P</th>
+          <th>GF</th><th>GC</th><th>DIF</th><th class="t-pts">PTS</th>
+          <th class="t-player">JUGADOR</th>
+        </tr></thead>
+        <tbody>
+          <tr class="row qualify first">
+              <td class="t-team"><span class="flag">🇪🇸</span>España</td>
+              <td>1</td><td>1</td><td>0</td><td>0</td>
+              <td>7</td><td>0</td>
+              <td class="pos">+7</td>
+              <td class="t-pts">3</td>
+              <td class="t-player"><span class="console-dot" style="background:#333333">PC</span>JAVIER</td>
+            </tr><tr class="row qualify second">
+              <td class="t-team"><span class="flag">🇺🇾</span>Uruguay</td>
+              <td>1</td><td>1</td><td>0</td><td>0</td>
+              <td>5</td><td>1</td>
+              <td class="pos">+4</td>
+              <td class="t-pts">3</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>JOSSUA</td>
+            </tr><tr class="row  ">
+              <td class="t-team"><span class="flag">🇸🇦</span>Arabia Saudita</td>
+              <td>0</td><td>0</td><td>0</td><td>0</td>
+              <td>0</td><td>0</td>
+              <td class="">0</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>GABRIEL</td>
+            </tr><tr class="row  ">
+              <td class="t-team"><span class="flag">🇨🇻</span>Cabo Verde</td>
+              <td>2</td><td>0</td><td>0</td><td>2</td>
+              <td>1</td><td>12</td>
+              <td class="neg">-11</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>EDUARDO</td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="group-block">
+      <div class="group-title">GRUPO I</div>
+      <table class="standings-table">
+        <thead><tr>
+          <th class="t-team">SELECCIÓN</th>
+          <th>PJ</th><th>G</th><th>E</th><th>P</th>
+          <th>GF</th><th>GC</th><th>DIF</th><th class="t-pts">PTS</th>
+          <th class="t-player">JUGADOR</th>
+        </tr></thead>
+        <tbody>
+          <tr class="row qualify first">
+              <td class="t-team"><span class="flag">🇸🇳</span>Senegal</td>
+              <td>1</td><td>1</td><td>0</td><td>0</td>
+              <td>10</td><td>5</td>
+              <td class="pos">+5</td>
+              <td class="t-pts">3</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>CIRO</td>
+            </tr><tr class="row qualify second">
+              <td class="t-team"><span class="flag">🇮🇶</span>Irak</td>
+              <td>0</td><td>0</td><td>0</td><td>0</td>
+              <td>0</td><td>0</td>
+              <td class="">0</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#333333">PC</span>JAVIER</td>
+            </tr><tr class="row  ">
+              <td class="t-team"><span class="flag">🇳🇴</span>Noruega</td>
+              <td>0</td><td>0</td><td>0</td><td>0</td>
+              <td>0</td><td>0</td>
+              <td class="">0</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>GABRIEL</td>
+            </tr><tr class="row  ">
+              <td class="t-team"><span class="flag">🇫🇷</span>Francia</td>
+              <td>1</td><td>0</td><td>0</td><td>1</td>
+              <td>5</td><td>10</td>
+              <td class="neg">-5</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>BENJAMIN</td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="group-block">
+      <div class="group-title">GRUPO J</div>
+      <table class="standings-table">
+        <thead><tr>
+          <th class="t-team">SELECCIÓN</th>
+          <th>PJ</th><th>G</th><th>E</th><th>P</th>
+          <th>GF</th><th>GC</th><th>DIF</th><th class="t-pts">PTS</th>
+          <th class="t-player">JUGADOR</th>
+        </tr></thead>
+        <tbody>
+          <tr class="row qualify first">
+              <td class="t-team"><span class="flag">🇦🇹</span>Austria</td>
+              <td>1</td><td>1</td><td>0</td><td>0</td>
+              <td>10</td><td>3</td>
+              <td class="pos">+7</td>
+              <td class="t-pts">3</td>
+              <td class="t-player"><span class="console-dot" style="background:#555555">N/A</span>JOSTHYN</td>
+            </tr><tr class="row qualify second">
+              <td class="t-team"><span class="flag">🇩🇿</span>Argelia</td>
+              <td>0</td><td>0</td><td>0</td><td>0</td>
+              <td>0</td><td>0</td>
+              <td class="">0</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>ELIO</td>
+            </tr><tr class="row  ">
+              <td class="t-team"><span class="flag">🇯🇴</span>Jordania</td>
+              <td>0</td><td>0</td><td>0</td><td>0</td>
+              <td>0</td><td>0</td>
+              <td class="">0</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span>JESUS</td>
+            </tr><tr class="row  ">
+              <td class="t-team"><span class="flag">🇦🇷</span>Argentina</td>
+              <td>1</td><td>0</td><td>0</td><td>1</td>
+              <td>3</td><td>10</td>
+              <td class="neg">-7</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>RAFAEL</td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="group-block">
+      <div class="group-title">GRUPO K</div>
+      <table class="standings-table">
+        <thead><tr>
+          <th class="t-team">SELECCIÓN</th>
+          <th>PJ</th><th>G</th><th>E</th><th>P</th>
+          <th>GF</th><th>GC</th><th>DIF</th><th class="t-pts">PTS</th>
+          <th class="t-player">JUGADOR</th>
+        </tr></thead>
+        <tbody>
+          <tr class="row qualify first">
+              <td class="t-team"><span class="flag">🇵🇹</span>Portugal</td>
+              <td>1</td><td>1</td><td>0</td><td>0</td>
+              <td>6</td><td>2</td>
+              <td class="pos">+4</td>
+              <td class="t-pts">3</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>GABRIEL</td>
+            </tr><tr class="row qualify second">
+              <td class="t-team"><span class="flag">🇨🇴</span>Colombia</td>
+              <td>0</td><td>0</td><td>0</td><td>0</td>
+              <td>0</td><td>0</td>
+              <td class="">0</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>JABY</td>
+            </tr><tr class="row  ">
+              <td class="t-team"><span class="flag">🇺🇿</span>Uzbekistán</td>
+              <td>0</td><td>0</td><td>0</td><td>0</td>
+              <td>0</td><td>0</td>
+              <td class="">0</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>MATÍAS</td>
+            </tr><tr class="row  ">
+              <td class="t-team"><span class="flag">🇨🇩</span>Congo DR</td>
+              <td>1</td><td>0</td><td>0</td><td>1</td>
+              <td>2</td><td>6</td>
+              <td class="neg">-4</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>CIRO</td>
+            </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="group-block">
+      <div class="group-title">GRUPO L</div>
+      <table class="standings-table">
+        <thead><tr>
+          <th class="t-team">SELECCIÓN</th>
+          <th>PJ</th><th>G</th><th>E</th><th>P</th>
+          <th>GF</th><th>GC</th><th>DIF</th><th class="t-pts">PTS</th>
+          <th class="t-player">JUGADOR</th>
+        </tr></thead>
+        <tbody>
+          <tr class="row qualify first">
+              <td class="t-team"><span class="flag">🇭🇷</span>Croacia</td>
+              <td>1</td><td>0</td><td>1</td><td>0</td>
+              <td>4</td><td>4</td>
+              <td class="">0</td>
+              <td class="t-pts">1</td>
+              <td class="t-player"><span class="console-dot" style="background:#555555">N/A</span>JOSTHYN</td>
+            </tr><tr class="row qualify second">
+              <td class="t-team"><span class="flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>Inglaterra</td>
+              <td>1</td><td>0</td><td>1</td><td>0</td>
+              <td>4</td><td>4</td>
+              <td class="">0</td>
+              <td class="t-pts">1</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>EDUARDO</td>
+            </tr><tr class="row  ">
+              <td class="t-team"><span class="flag">🇬🇭</span>Ghana</td>
+              <td>0</td><td>0</td><td>0</td><td>0</td>
+              <td>0</td><td>0</td>
+              <td class="">0</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>ADRIÁN</td>
+            </tr><tr class="row  ">
+              <td class="t-team"><span class="flag">🇵🇦</span>Panamá</td>
+              <td>0</td><td>0</td><td>0</td><td>0</td>
+              <td>0</td><td>0</td>
+              <td class="">0</td>
+              <td class="t-pts">0</td>
+              <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>BENJAMIN</td>
+            </tr>
+        </tbody>
+      </table>
+    </div></div>
+<div class="footer">Criterios FIFA: PTS → DIF → GF → H2H PTS → H2H DIF → H2H GF</div>
+</body>
+</html>
