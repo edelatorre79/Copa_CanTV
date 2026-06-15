@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>3ra Copa CANTV - Editor de Resultados (Administradores)</title>
+<style>
+  html,body,#root{margin:0;padding:0;min-height:100vh;background:#07111f}
+  *{box-sizing:border-box}
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+  input[type=number]{-moz-appearance:textfield}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<!-- React + ReactDOM + Babel (compila JSX en el navegador) -->
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin></script>
+
+<!-- Lógica compartida: grupos, jugadores, generadores de HTML y API de GitHub -->
+<script src="shared.js"></script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useCallback } = React;
+
+// ══════════════════════════════════════════════
+// MAIN APP COMPONENT
+// cfg = { owner, repo, branch, token } — config del repo GitHub
+// ══════════════════════════════════════════════
+function CopaCantv({ cfg, onReconfigure }) {
+  const [results, setResults] = useState({});
+  const [activeGroup, setActiveGroup] = useState("A");
+  const [status, setStatus] = useState("idle"); // idle | saving | done | error
+  const [statusMsg, setStatusMsg] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("results"); // results | standings | bracket
+  const [publishedUrls, setPublishedUrls] = useState(null);
+
+  // Carga inicial: lee data.json desde el repo de GitHub
+  useEffect(() => {
+    async function load() {
+      try {
+        const file = await ghGetFile(cfg, "data.json");
+        if (file) setResults(JSON.parse(file.content));
+      } catch (e) {
+        console.error(e);
+      }
+      setLoading(false);
+    }
+    load();
+  }, []);
+
+  // Init group results
+  useEffect(() => {
+    const gk = activeGroup;
+    const grp = FIFA_GROUPS[gk];
+    if(!grp) return;
+    setResults(prev => {
+      if(prev[gk]) return prev;
+      const init = {};
+      grp.matches.forEach(m => { init[m.id] = {t1:m.t1, t2:m.t2, g1:"", g2:"", date:m.date}; });
+      return {...prev, [gk]: Object.values(init)};
+    });
+  }, [activeGroup]);
+
+  const handleScore = useCallback((gk, matchId, field, val) => {
+    setResults(prev => {
+      const grpResults = [...(prev[gk]||[])];
+      const mIdx = grpResults.findIndex((_,i)=> {
+        const matches = FIFA_GROUPS[gk].matches;
+        return matches[i]?.id === matchId;
+      });
+      if(mIdx >= 0) {
+        const updated = [...grpResults];
+        updated[mIdx] = {...updated[mIdx], [field]: val};
+        return {...prev, [gk]: updated};
+      }
+      return prev;
+    });
+  }, []);
+
+  // Genera los HTML y los sube/reemplaza directamente en el repo de GitHub
+  const handlePublish = async () => {
+    setStatus("saving");
+    setStatusMsg("Publicando...");
+    try {
+      const toSave = {};
+      Object.keys(FIFA_GROUPS).forEach(gk => {
+        const grp = FIFA_GROUPS[gk];
+        const grpRes = results[gk] || [];
+        toSave[gk] = grp.matches.map((m, i) => ({
+          ...m,
+          g1: grpRes[i]?.g1 ?? "",
+          g2: grpRes[i]?.g2 ?? "",
+        }));
+      });
+
+      // 1) Guarda los resultados crudos (para poder seguir editando después)
+      await ghPutFile(cfg, "data.json", JSON.stringify(toSave, null, 2), "Actualiza resultados — Copa CANTV");
+
+      // 2) Genera y reemplaza results.html (tabla de grupos)
+      const standingsHTML = generateStandingsHTML(toSave);
+      await ghPutFile(cfg, "results.html", standingsHTML, "Actualiza results.html — Copa CANTV");
+
+      // 3) Genera y reemplaza playoffs.html (octavos de final)
+      const bracketHTML = generateBracketHTML(toSave);
+      await ghPutFile(cfg, "playoffs.html", bracketHTML, "Actualiza playoffs.html — Copa CANTV");
+
+      const base = `https://${cfg.owner}.github.io/${cfg.repo}`;
+      setPublishedUrls({ results: `${base}/results.html`, playoffs: `${base}/playoffs.html` });
+
+      setStatus("done");
+      setStatusMsg("✓ Publicado — GitHub Pages tarda ~1 min en actualizar");
+      setTimeout(()=>{ setStatus("idle"); }, 4000);
+    } catch(e) {
+      setStatus("error");
+      setStatusMsg("Error: " + e.message);
+    }
+  };
+
+  const getGroupStats = useCallback((gk) => {
+    const grp = FIFA_GROUPS[gk];
+    const grpRes = results[gk] || [];
+    const mapped = grp.matches.map((m,i) => ({...m, g1:grpRes[i]?.g1??"", g2:grpRes[i]?.g2??""}));
+    const stats = calcStats(grp.teams, mapped);
+    return sortStandings(grp.teams, stats, mapped).map(t => ({team:t,...stats[t]}));
+  }, [results]);
+
+  if(loading) return (
+    <div style={{background:"#07111f",minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",color:"#c9a84c",fontSize:18,letterSpacing:3}}>
+      CARGANDO...
+    </div>
+  );
+
+  const grpKeys = Object.keys(FIFA_GROUPS);
+
+  const StandingsView = () => (
+    <div style={{padding:"0 0 20px"}}>
+      {grpKeys.map(gk => {
+        const grp = FIFA_GROUPS[gk];
+        const grpRes = results[gk]||[];
+        const mapped = grp.matches.map((m,i)=>({...m,g1:grpRes[i]?.g1??"",g2:grpRes[i]?.g2??""}));
+        const stats = calcStats(grp.teams, mapped);
+        const sorted = sortStandings(grp.teams, stats, mapped);
+        return (
+          <div key={gk} style={{marginBottom:16}}>
+            <div style={{background:"#c9a84c",color:"#07111f",fontWeight:900,fontSize:13,letterSpacing:3,padding:"6px 14px",textAlign:"center"}}>GRUPO {gk}</div>
+            <table style={{width:"100%",borderCollapse:"collapse",fontSize:11}}>
+              <thead>
+                <tr style={{background:"rgba(201,168,76,.1)"}}>
+                  <th style={{textAlign:"left",padding:"5px 8px",color:"rgba(201,168,76,.8)",fontSize:9,letterSpacing:1}}>SELECCIÓN</th>
+                  {["PJ","G","E","P","GF","GC","DIF","PTS"].map(h=>(
+                    <th key={h} style={{padding:"5px 5px",color:"rgba(201,168,76,.8)",fontSize:9,letterSpacing:1,textAlign:"center"}}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {sorted.map((team,idx)=>{
+                  const s = stats[team];
+                  const dif = s.gf-s.gc;
+                  const isQ = idx<2;
+                  return (
+                    <tr key={team} style={{background: idx===0?"rgba(255,215,0,.05)":idx===1?"rgba(255,215,0,.02)":"transparent", borderBottom:"1px solid rgba(255,255,255,.05)"}}>
+                      <td style={{padding:"6px 8px",fontWeight:600,color:isQ?"#fff":"rgba(255,255,255,.6)",borderLeft:`2px solid ${idx===0?"#ffd700":idx===1?"rgba(255,215,0,.3)":"transparent"}`}}>
+                        {FLAGS[team]||""} {team}
+                      </td>
+                      <td style={{textAlign:"center",padding:"6px 4px"}}>{s.pj}</td>
+                      <td style={{textAlign:"center",padding:"6px 4px"}}>{s.g}</td>
+                      <td style={{textAlign:"center",padding:"6px 4px"}}>{s.e}</td>
+                      <td style={{textAlign:"center",padding:"6px 4px"}}>{s.p}</td>
+                      <td style={{textAlign:"center",padding:"6px 4px"}}>{s.gf}</td>
+                      <td style={{textAlign:"center",padding:"6px 4px"}}>{s.gc}</td>
+                      <td style={{textAlign:"center",padding:"6px 4px",color:dif>0?"#4ade80":dif<0?"#f87171":"#fff",fontWeight:700}}>{dif>0?"+":""}{dif}</td>
+                      <td style={{textAlign:"center",padding:"6px 4px",fontWeight:900,color:"#c9a84c",fontSize:14}}>{s.pts}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        );
+      })}
+    </div>
+  );
+
+  const BracketView = () => {
+    const qualifiers = {};
+    const thirdPlaces = [];
+    grpKeys.forEach(gk => {
+      const grp = FIFA_GROUPS[gk];
+      const grpRes = results[gk]||[];
+      const mapped = grp.matches.map((m,i)=>({...m,g1:grpRes[i]?.g1??"",g2:grpRes[i]?.g2??""}));
+      const stats = calcStats(grp.teams, mapped);
+      const sorted = sortStandings(grp.teams, stats, mapped);
+      qualifiers[gk] = {first:sorted[0], second:sorted[1]};
+      const s3 = stats[sorted[2]];
+      if(s3) thirdPlaces.push({group:gk, team:sorted[2], pts:s3.pts, gd:s3.gf-s3.gc, gf:s3.gf});
+    });
+    thirdPlaces.sort((a,b)=>b.pts!==a.pts?b.pts-a.pts:b.gd!==a.gd?b.gd-a.gd:b.gf-a.gf);
+
+    const SlotComp = ({team, grp}) => {
+      if(!team) return <div style={{background:"rgba(255,255,255,.03)",border:"1px dashed rgba(255,255,255,.15)",borderRadius:6,padding:"8px 10px",marginBottom:4,fontSize:12,color:"rgba(255,255,255,.3)"}}>Por definir</div>;
+      const p = PLAYERS[team];
+      return (
+        <div style={{background:"rgba(255,255,255,.04)",border:"1px solid rgba(255,255,255,.1)",borderRadius:6,padding:"8px 10px",marginBottom:4}}>
+          <div style={{fontSize:14,fontWeight:700}}>{FLAGS[team]||""} {team}</div>
+          {p && <div style={{fontSize:11,color:"#c9a84c",marginTop:2}}>{p.name} <span style={{color:"rgba(255,255,255,.35)",fontFamily:"monospace",fontSize:10}}>{p.tag}</span></div>}
+          <div style={{fontSize:9,color:"rgba(255,255,255,.3)",marginTop:1,letterSpacing:1}}>Grupo {grp} · {grp?qualifiers[grp]?.first===team?"1°":"2°":""}</div>
+        </div>
+      );
+    };
+
+    const pairings = [
+      {a:{team:qualifiers.A?.first,grp:"A"}, b:{team:qualifiers.B?.second,grp:"B"}},
+      {a:{team:qualifiers.C?.first,grp:"C"}, b:{team:qualifiers.D?.second,grp:"D"}},
+      {a:{team:qualifiers.E?.first,grp:"E"}, b:{team:qualifiers.F?.second,grp:"F"}},
+      {a:{team:qualifiers.G?.first,grp:"G"}, b:{team:qualifiers.H?.second,grp:"H"}},
+      {a:{team:qualifiers.I?.first,grp:"I"}, b:{team:qualifiers.J?.second,grp:"J"}},
+      {a:{team:qualifiers.K?.first,grp:"K"}, b:{team:qualifiers.L?.second,grp:"L"}},
+      {a:{team:qualifiers.B?.first,grp:"B"}, b:{team:qualifiers.A?.second,grp:"A"}},
+      {a:{team:qualifiers.D?.first,grp:"D"}, b:{team:qualifiers.C?.second,grp:"C"}},
+      {a:{team:qualifiers.F?.first,grp:"F"}, b:{team:qualifiers.E?.second,grp:"E"}},
+      {a:{team:qualifiers.H?.first,grp:"H"}, b:{team:qualifiers.G?.second,grp:"G"}},
+      {a:{team:qualifiers.J?.first,grp:"J"}, b:{team:qualifiers.I?.second,grp:"I"}},
+      {a:{team:qualifiers.L?.first,grp:"L"}, b:{team:qualifiers.K?.second,grp:"K"}},
+      {a:{team:thirdPlaces[0]?.team,grp:thirdPlaces[0]?.group}, b:{team:null,grp:"?"}},
+      {a:{team:thirdPlaces[1]?.team,grp:thirdPlaces[1]?.group}, b:{team:null,grp:"?"}},
+      {a:{team:thirdPlaces[2]?.team,grp:thirdPlaces[2]?.group}, b:{team:null,grp:"?"}},
+      {a:{team:thirdPlaces[3]?.team,grp:thirdPlaces[3]?.group}, b:{team:null,grp:"?"}},
+    ];
+
+    return (
+      <div style={{padding:"0 0 20px"}}>
+        <div style={{textAlign:"center",fontSize:11,color:"rgba(255,255,255,.35)",padding:"10px 16px 16px",lineHeight:1.6}}>
+          Proyección basada en resultados actuales. Los equipos sin partidos se ubican por criterio provisional.
+        </div>
+        <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))",gap:10,padding:"0 12px"}}>
+          {pairings.map((m,i)=>(
+            <div key={i} style={{background:"#0d1e3a",border:"1px solid rgba(201,168,76,.2)",borderRadius:10,padding:10}}>
+              <div style={{fontSize:9,color:"rgba(201,168,76,.5)",letterSpacing:2,fontWeight:700,marginBottom:8}}>OCTAVO R32-{String(i+1).padStart(2,"0")}</div>
+              <SlotComp team={m.a.team} grp={m.a.grp} />
+              <div style={{textAlign:"center",fontSize:10,fontWeight:900,color:"rgba(255,255,255,.2)",padding:"2px 0",letterSpacing:3}}>VS</div>
+              <SlotComp team={m.b.team} grp={m.b.grp} />
+            </div>
+          ))}
+        </div>
+        <div style={{maxWidth:600,margin:"20px auto",padding:"0 12px"}}>
+          <div style={{background:"#0d1e3a",borderRadius:10,overflow:"hidden",border:"1px solid rgba(201,168,76,.2)"}}>
+            <div style={{background:"rgba(201,168,76,.12)",padding:"8px 14px",fontSize:11,color:"#c9a84c",fontWeight:800,letterSpacing:2}}>RANKING MEJORES TERCEROS</div>
+            {thirdPlaces.map((t,i)=>(
+              <div key={t.team} style={{display:"flex",alignItems:"center",gap:8,padding:"7px 12px",borderBottom:"1px solid rgba(255,255,255,.05)",background:i<8?"rgba(74,222,128,.04)":"transparent"}}>
+                <span style={{fontSize:11,color:"rgba(255,255,255,.4)",width:18}}>{i+1}°</span>
+                <span style={{fontSize:12,flex:1}}>{FLAGS[t.team]||""} {t.team} <span style={{color:"rgba(255,255,255,.35)",fontSize:10}}>Gr.{t.group}</span></span>
+                <span style={{fontSize:11,color:"#c9a84c",fontWeight:900,width:30}}>{t.pts}pts</span>
+                <span style={{fontSize:10,color:t.gd>=0?"#4ade80":"#f87171",width:30}}>{t.gd>=0?"+":""}{t.gd}</span>
+                {i<8?<span style={{fontSize:9,background:"#4ade80",color:"#07111f",padding:"1px 5px",borderRadius:3,fontWeight:800}}>✓</span>:<span style={{fontSize:10,color:"rgba(255,255,255,.25)"}}>✗</span>}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div style={{background:"#07111f",minHeight:"100vh",color:"#fff",fontFamily:"-apple-system,system-ui,Helvetica,Arial,sans-serif"}}>
+      {/* HERO */}
+      <div style={{background:"linear-gradient(135deg,#0d1e3a,#071020)",borderBottom:"3px solid #c9a84c",padding:"18px 16px",textAlign:"center",position:"relative"}}>
+        <button onClick={onReconfigure} style={{position:"absolute",top:10,right:10,background:"transparent",border:"1px solid rgba(255,255,255,.15)",borderRadius:6,color:"rgba(255,255,255,.4)",fontSize:9,padding:"4px 8px",letterSpacing:1,cursor:"pointer"}}>⚙ CONFIG</button>
+        <div style={{fontSize:10,letterSpacing:4,color:"rgba(201,168,76,.65)",marginBottom:4}}>FIFA WORLD CUP 2026 · USA · CAN · MEX</div>
+        <h1 style={{fontSize:26,fontWeight:900,letterSpacing:2,color:"#fff",lineHeight:1.1}}>3RA COPA CANTV</h1>
+        <div style={{fontSize:12,color:"#c9a84c",letterSpacing:3,marginTop:3}}>GESTIÓN DE RESULTADOS</div>
+        <div style={{fontSize:9,color:"rgba(255,255,255,.25)",marginTop:4,letterSpacing:1}}>{cfg.owner}/{cfg.repo} · {cfg.branch}</div>
+      </div>
+
+      {/* TABS */}
+      <div style={{display:"flex",borderBottom:"1px solid rgba(255,255,255,.08)",background:"#0a1628"}}>
+        {[{id:"results",label:"RESULTADOS"},{id:"standings",label:"POSICIONES"},{id:"bracket",label:"OCTAVOS"}].map(tab=>(
+          <button key={tab.id} onClick={()=>setActiveTab(tab.id)} style={{
+            flex:1,padding:"12px 0",background:"transparent",border:"none",
+            borderBottom:activeTab===tab.id?"2px solid #c9a84c":"2px solid transparent",
+            color:activeTab===tab.id?"#c9a84c":"rgba(255,255,255,.4)",
+            fontSize:10,fontWeight:800,letterSpacing:2,cursor:"pointer",transition:"all .2s"
+          }}>{tab.label}</button>
+        ))}
+      </div>
+
+      {activeTab === "results" && (
+        <div>
+          {/* Group selector */}
+          <div style={{padding:"12px 12px 0",overflowX:"auto"}}>
+            <div style={{display:"flex",gap:6,minWidth:"max-content"}}>
+              {grpKeys.map(gk=>{
+                const grpRes = results[gk]||[];
+                const played = grpRes.filter(r=>r.g1!==""&&r.g2!=="").length;
+                const total = FIFA_GROUPS[gk].matches.length;
+                return (
+                  <button key={gk} onClick={()=>setActiveGroup(gk)} style={{
+                    padding:"8px 14px",background:activeGroup===gk?"#c9a84c":"#0d1e3a",
+                    border:`1px solid ${activeGroup===gk?"#c9a84c":"rgba(201,168,76,.3)"}`,
+                    borderRadius:6,color:activeGroup===gk?"#07111f":"#c9a84c",
+                    fontWeight:800,fontSize:12,letterSpacing:1,cursor:"pointer",
+                    position:"relative",minWidth:52
+                  }}>
+                    {gk}
+                    {played>0&&<span style={{position:"absolute",top:-4,right:-4,background:"#4ade80",color:"#07111f",fontSize:8,borderRadius:10,padding:"1px 4px",fontWeight:900}}>{played}/{total}</span>}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Matches */}
+          <div style={{padding:12}}>
+            {(() => {
+              const gk = activeGroup;
+              const grp = FIFA_GROUPS[gk];
+              const grpRes = results[gk]||grp.matches.map(m=>({...m,g1:"",g2:""}));
+              return (
+                <div>
+                  <div style={{fontSize:10,letterSpacing:3,color:"rgba(201,168,76,.6)",textAlign:"center",marginBottom:12,fontWeight:700}}>
+                    GRUPO {gk} — {grp.teams.map(t=>t).join(" · ")}
+                  </div>
+                  {grp.matches.map((m,i)=>{
+                    const r = grpRes[i]||{g1:"",g2:""};
+                    const p1 = PLAYERS[m.t1], p2 = PLAYERS[m.t2];
+                    const hasResult = r.g1!==""&&r.g2!=="";
+                    const jornada = i<2?"JORNADA 1":i<4?"JORNADA 2":"JORNADA 3";
+                    const showJornada = i===0||i===2||i===4;
+                    return (
+                      <div key={m.id}>
+                        {showJornada && <div style={{fontSize:9,letterSpacing:2,color:"rgba(255,255,255,.25)",padding:"8px 4px 4px",fontWeight:700}}>{jornada}</div>}
+                        <div style={{background:"#0d1e3a",border:`1px solid ${hasResult?"rgba(74,222,128,.3)":"rgba(255,255,255,.06)"}`,borderRadius:10,padding:12,marginBottom:8}}>
+                          <div style={{fontSize:9,color:"rgba(255,255,255,.3)",letterSpacing:2,marginBottom:8}}>{m.date}</div>
+                          <div style={{display:"flex",alignItems:"center",gap:8}}>
+                            {/* Team 1 */}
+                            <div style={{flex:1}}>
+                              <div style={{fontSize:13,fontWeight:700,marginBottom:3}}>{FLAGS[m.t1]||""} {m.t1}</div>
+                              {p1&&<div style={{fontSize:10,color:"rgba(201,168,76,.7)"}}>{p1.name} <span style={{fontSize:9,color:"rgba(255,255,255,.35)",fontFamily:"monospace"}}>{p1.tag}</span></div>}
+                            </div>
+                            {/* Scores */}
+                            <div style={{display:"flex",alignItems:"center",gap:6,flexShrink:0}}>
+                              <input
+                                type="number" min="0" max="99"
+                                value={r.g1}
+                                onChange={e=>handleScore(gk,m.id,"g1",e.target.value)}
+                                style={{width:44,height:40,background:"#07111f",border:`1px solid ${hasResult?"#4ade80":"rgba(255,255,255,.15)"}`,borderRadius:6,color:"#fff",fontSize:20,fontWeight:900,textAlign:"center",outline:"none"}}
+                              />
+                              <span style={{color:"rgba(255,255,255,.3)",fontWeight:700,fontSize:12}}>:</span>
+                              <input
+                                type="number" min="0" max="99"
+                                value={r.g2}
+                                onChange={e=>handleScore(gk,m.id,"g2",e.target.value)}
+                                style={{width:44,height:40,background:"#07111f",border:`1px solid ${hasResult?"#4ade80":"rgba(255,255,255,.15)"}`,borderRadius:6,color:"#fff",fontSize:20,fontWeight:900,textAlign:"center",outline:"none"}}
+                              />
+                            </div>
+                            {/* Team 2 */}
+                            <div style={{flex:1,textAlign:"right"}}>
+                              <div style={{fontSize:13,fontWeight:700,marginBottom:3}}>{m.t2} {FLAGS[m.t2]||""}</div>
+                              {p2&&<div style={{fontSize:10,color:"rgba(201,168,76,.7)"}}><span style={{fontSize:9,color:"rgba(255,255,255,.35)",fontFamily:"monospace"}}>{p2.tag}</span> {p2.name}</div>}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  {/* Mini standings preview */}
+                  <div style={{marginTop:16,background:"#0a1628",borderRadius:8,overflow:"hidden",border:"1px solid rgba(201,168,76,.15)"}}>
+                    <div style={{padding:"6px 12px",fontSize:9,color:"rgba(201,168,76,.6)",letterSpacing:2,fontWeight:700}}>POSICIÓN ACTUAL — GRUPO {gk}</div>
+                    {getGroupStats(gk).map((s,idx)=>(
+                      <div key={s.team} style={{display:"flex",alignItems:"center",gap:6,padding:"6px 12px",borderBottom:"1px solid rgba(255,255,255,.04)",borderLeft:`2px solid ${idx===0?"#ffd700":idx===1?"rgba(255,215,0,.3)":"transparent"}`}}>
+                        <span style={{fontSize:10,color:"rgba(255,255,255,.3)",width:16}}>{idx+1}</span>
+                        <span style={{fontSize:12,flex:1,fontWeight:idx<2?700:400,color:idx<2?"#fff":"rgba(255,255,255,.55)"}}>{FLAGS[s.team]||""} {s.team}</span>
+                        <span style={{fontSize:10,color:"rgba(255,255,255,.4)",width:16}}>{s.pj}</span>
+                        <span style={{fontSize:10,color:s.gf-s.gc>0?"#4ade80":s.gf-s.gc<0?"#f87171":"rgba(255,255,255,.4)",width:24,textAlign:"right"}}>{s.gf-s.gc>0?"+":""}{s.gf-s.gc}</span>
+                        <span style={{fontSize:14,fontWeight:900,color:"#c9a84c",width:24,textAlign:"right"}}>{s.pts}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+
+          {/* Publish button */}
+          <div style={{position:"sticky",bottom:0,padding:"10px 12px",background:"rgba(7,17,31,.95)",borderTop:"1px solid rgba(201,168,76,.2)",backdropFilter:"blur(8px)"}}>
+            <button onClick={handlePublish} disabled={status==="saving"} style={{
+              width:"100%",padding:"13px",
+              background:status==="done"?"#4ade80":status==="error"?"#f87171":"#c9a84c",
+              color:"#07111f",border:"none",borderRadius:8,
+              fontWeight:900,fontSize:13,letterSpacing:2,cursor:status==="saving"?"wait":"pointer",
+              transition:"all .3s"
+            }}>
+              {status==="saving" ? "PUBLICANDO..." : status==="done" ? "✓ PUBLICADO" : status==="error" ? "✗ ERROR — REINTENTAR" : "🚀 GRABAR Y PUBLICAR (results.html + playoffs.html)"}
+            </button>
+            {statusMsg && status!=="idle" && (
+              <div style={{textAlign:"center",fontSize:10,color:status==="error"?"#f87171":"rgba(255,255,255,.4)",marginTop:6,letterSpacing:1}}>{statusMsg}</div>
+            )}
+            {publishedUrls && (
+              <div style={{display:"flex",gap:8,marginTop:8}}>
+                <a href={publishedUrls.results} target="_blank" rel="noopener noreferrer" style={{flex:1,textAlign:"center",padding:"9px",background:"#0d1e3a",border:"1px solid rgba(201,168,76,.3)",borderRadius:6,color:"#c9a84c",fontSize:11,fontWeight:700,letterSpacing:1,textDecoration:"none",overflow:"hidden",textOverflow:"ellipsis"}}>
+                  📊 results.html
+                </a>
+                <a href={publishedUrls.playoffs} target="_blank" rel="noopener noreferrer" style={{flex:1,textAlign:"center",padding:"9px",background:"#0d1e3a",border:"1px solid rgba(201,168,76,.3)",borderRadius:6,color:"#c9a84c",fontSize:11,fontWeight:700,letterSpacing:1,textDecoration:"none"}}>
+                  🏆 playoffs.html
+                </a>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {activeTab === "standings" && <StandingsView />}
+      {activeTab === "bracket" && <BracketView />}
+
+      {activeTab !== "results" && (
+        <div style={{textAlign:"center",fontSize:10,color:"rgba(255,255,255,.2)",padding:"0 16px 20px",letterSpacing:1}}>
+          Esta vista previa es solo para ti. Presiona "Grabar y Publicar" para actualizar results.html y playoffs.html.
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════
+// CONFIGURACIÓN — owner/repo/branch/token de GitHub
+// Se guarda SOLO en este navegador (localStorage),
+// nunca se sube al repositorio.
+// ══════════════════════════════════════════════
+const CFG_KEY = "cantv-gh-config";
+
+function loadConfig() {
+  try {
+    const raw = localStorage.getItem(CFG_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch(e) { return null; }
+}
+
+function SettingsScreen({ initial, onSave }) {
+  const [owner, setOwner] = useState(initial?.owner || "");
+  const [repo, setRepo] = useState(initial?.repo || "");
+  const [branch, setBranch] = useState(initial?.branch || "main");
+  const [token, setToken] = useState(initial?.token || "");
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setBusy(true);
+    const cfg = { owner: owner.trim(), repo: repo.trim(), branch: branch.trim() || "main", token: token.trim() };
+    try {
+      await ghTestConnection(cfg);
+      localStorage.setItem(CFG_KEY, JSON.stringify(cfg));
+      onSave(cfg);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div style={{background:"#07111f",minHeight:"100vh",display:"flex",alignItems:"center",justifyContent:"center",padding:20,fontFamily:"-apple-system,system-ui,Helvetica,Arial,sans-serif"}}>
+      <form onSubmit={handleSubmit} style={{width:"100%",maxWidth:380,background:"#0d1e3a",border:"1px solid rgba(201,168,76,.25)",borderRadius:12,padding:28}}>
+        <div style={{textAlign:"center",marginBottom:20}}>
+          <div style={{fontSize:10,letterSpacing:4,color:"rgba(201,168,76,.65)",marginBottom:6}}>FIFA WORLD CUP 2026</div>
+          <div style={{fontSize:22,fontWeight:900,color:"#fff",letterSpacing:2}}>3RA COPA CANTV</div>
+          <div style={{fontSize:11,color:"#c9a84c",letterSpacing:3,marginTop:4}}>CONEXIÓN A GITHUB</div>
+        </div>
+
+        <label style={{display:"block",fontSize:10,color:"rgba(255,255,255,.4)",letterSpacing:1,marginBottom:4}}>USUARIO U ORGANIZACIÓN (owner)</label>
+        <input required value={owner} onChange={e=>setOwner(e.target.value)} placeholder="ej. lalo2026"
+          style={{width:"100%",padding:"11px",marginBottom:12,background:"#07111f",border:"1px solid rgba(255,255,255,.12)",borderRadius:6,color:"#fff",fontSize:14,outline:"none"}} />
+
+        <label style={{display:"block",fontSize:10,color:"rgba(255,255,255,.4)",letterSpacing:1,marginBottom:4}}>NOMBRE DEL REPOSITORIO</label>
+        <input required value={repo} onChange={e=>setRepo(e.target.value)} placeholder="ej. copa-cantv-2026"
+          style={{width:"100%",padding:"11px",marginBottom:12,background:"#07111f",border:"1px solid rgba(255,255,255,.12)",borderRadius:6,color:"#fff",fontSize:14,outline:"none"}} />
+
+        <label style={{display:"block",fontSize:10,color:"rgba(255,255,255,.4)",letterSpacing:1,marginBottom:4}}>RAMA (branch)</label>
+        <input value={branch} onChange={e=>setBranch(e.target.value)} placeholder="main"
+          style={{width:"100%",padding:"11px",marginBottom:12,background:"#07111f",border:"1px solid rgba(255,255,255,.12)",borderRadius:6,color:"#fff",fontSize:14,outline:"none"}} />
+
+        <label style={{display:"block",fontSize:10,color:"rgba(255,255,255,.4)",letterSpacing:1,marginBottom:4}}>PERSONAL ACCESS TOKEN (fine-grained)</label>
+        <input required type="password" value={token} onChange={e=>setToken(e.target.value)} placeholder="github_pat_..."
+          style={{width:"100%",padding:"11px",marginBottom:6,background:"#07111f",border:"1px solid rgba(255,255,255,.12)",borderRadius:6,color:"#fff",fontSize:14,outline:"none",fontFamily:"monospace"}} />
+        <div style={{fontSize:9,color:"rgba(255,255,255,.3)",marginBottom:16,lineHeight:1.6}}>
+          Crea uno en GitHub → Settings → Developer settings → Fine-grained tokens.
+          Dale permiso "Contents: Read and write" solo sobre este repositorio.
+          Se guarda únicamente en este navegador.
+        </div>
+
+        {error && <div style={{color:"#f87171",fontSize:11,marginBottom:12,textAlign:"center"}}>{error}</div>}
+
+        <button type="submit" disabled={busy} style={{width:"100%",padding:"12px",background:"#c9a84c",color:"#07111f",border:"none",borderRadius:8,fontWeight:900,fontSize:13,letterSpacing:2,cursor:"pointer"}}>
+          {busy ? "VERIFICANDO..." : "GUARDAR Y CONECTAR"}
+        </button>
+      </form>
+    </div>
+  );
+}
+
+// ══════════════════════════════════════════════
+// APP — decide si mostrar configuración o el editor
+// ══════════════════════════════════════════════
+function App() {
+  const [cfg, setCfg] = useState(() => loadConfig());
+
+  if (!cfg) {
+    return <SettingsScreen onSave={setCfg} />;
+  }
+
+  return (
+    <CopaCantv
+      cfg={cfg}
+      onReconfigure={() => {
+        if (confirm("¿Editar la configuración de conexión a GitHub?")) {
+          setCfg(null);
+        }
+      }}
+    />
+  );
+}
+
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
