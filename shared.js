@@ -263,15 +263,53 @@ function getH2H(teams, results) {
 // ══════════════════════════════════════════════
 function generateStandingsHTML(allResults) {
   const groupKeys = Object.keys(FIFA_GROUPS);
-  let groupsHTML = "";
-  groupKeys.forEach(gk => {
+  let panelsHTML = "";
+
+  groupKeys.forEach((gk, idx) => {
     const grp = FIFA_GROUPS[gk];
-    const results = (allResults[gk]||[]).filter(r=>r.g1!==""&&r.g2!=="");
-    const stats = calcStats(grp.teams, results);
-    const sorted = sortStandings(grp.teams, stats, results);
-    groupsHTML += `
-    <div class="group-block">
-      <div class="group-title">GRUPO ${gk}</div>
+    const grpRes = allResults[gk] || [];
+    const mapped = grp.matches.map((m,i) => ({...m, g1: grpRes[i]?.g1 ?? "", g2: grpRes[i]?.g2 ?? ""}));
+    const playedResults = mapped.filter(r=>r.g1!==""&&r.g2!=="");
+    const stats = calcStats(grp.teams, playedResults);
+    const sorted = sortStandings(grp.teams, stats, playedResults);
+
+    const tableRows = sorted.map((team,i)=>{
+      const s = stats[team];
+      const p = PLAYERS[team];
+      const isTop = i===0 ? "first" : i===1 ? "second" : "";
+      return `<tr class="row ${isTop}">
+        <td class="t-team"><span class="flag">${FLAGS[team]||""}</span>${team}</td>
+        <td>${s.pj}</td><td>${s.g}</td><td>${s.e}</td><td>${s.p}</td>
+        <td>${s.gf}</td><td>${s.gc}</td>
+        <td class="${s.gf-s.gc>0?"pos":s.gf-s.gc<0?"neg":""}">${s.gf-s.gc>0?"+":""}${s.gf-s.gc}</td>
+        <td class="t-pts">${s.pts}</td>
+        <td class="t-player">${p?`<span class="console-dot" style="background:${p.bg}">${p.console}</span>${p.name}`:"-"}</td>
+      </tr>`;
+    }).join("");
+
+    const matchRows = mapped.map((m,i) => {
+      const jornada = i<2 ? 1 : i<4 ? 2 : 3;
+      const hasResult = m.g1!=="" && m.g2!=="";
+      const p1 = PLAYERS[m.t1], p2 = PLAYERS[m.t2];
+      return `<div class="match-row ${hasResult?"played":"pending"}">
+        <span class="match-meta">J${jornada} · ${m.date}</span>
+        <div class="match-line">
+          <div class="match-team">
+            <span class="match-team-name">${FLAGS[m.t1]||""} ${m.t1}</span>
+            ${p1?`<span class="match-player">${p1.name}</span>`:""}
+          </div>
+          <div class="match-score ${hasResult?"":"tbd"}">${hasResult?`${m.g1} - ${m.g2}`:"vs"}</div>
+          <div class="match-team right">
+            ${p2?`<span class="match-player">${p2.name}</span>`:""}
+            <span class="match-team-name">${m.t2} ${FLAGS[m.t2]||""}</span>
+          </div>
+        </div>
+        ${hasResult?"":'<div class="pending-badge">⏳ PENDIENTE DE CAPTURAR</div>'}
+      </div>`;
+    }).join("");
+
+    panelsHTML += `
+    <div class="group-panel" id="group-${gk}" style="display:${idx===0?"block":"none"}">
       <table class="standings-table">
         <thead><tr>
           <th class="t-team">SELECCIÓN</th>
@@ -279,25 +317,19 @@ function generateStandingsHTML(allResults) {
           <th>GF</th><th>GC</th><th>DIF</th><th class="t-pts">PTS</th>
           <th class="t-player">JUGADOR</th>
         </tr></thead>
-        <tbody>
-          ${sorted.map((team,idx)=>{
-            const s = stats[team];
-            const p = PLAYERS[team];
-            const qualify = idx<2 ? "qualify" : "";
-            const isTop = idx===0 ? "first" : idx===1 ? "second" : "";
-            return `<tr class="row ${qualify} ${isTop}">
-              <td class="t-team"><span class="flag">${FLAGS[team]||""}</span>${team}</td>
-              <td>${s.pj}</td><td>${s.g}</td><td>${s.e}</td><td>${s.p}</td>
-              <td>${s.gf}</td><td>${s.gc}</td>
-              <td class="${s.gf-s.gc>0?"pos":s.gf-s.gc<0?"neg":""}">${s.gf-s.gc>0?"+":""}${s.gf-s.gc}</td>
-              <td class="t-pts">${s.pts}</td>
-              <td class="t-player">${p?`<span class="console-dot" style="background:${p.bg}">${p.console}</span>${p.name}`:"-"}</td>
-            </tr>`;
-          }).join("")}
-        </tbody>
+        <tbody>${tableRows}</tbody>
       </table>
+      <div class="matches-section">
+        <div class="matches-title">RESULTADOS CAPTURADOS — GRUPO ${gk}</div>
+        ${matchRows}
+      </div>
     </div>`;
   });
+
+  const options = groupKeys.map(gk => {
+    const grp = FIFA_GROUPS[gk];
+    return `<option value="${gk}">GRUPO ${gk} — ${grp.teams.join(" · ")}</option>`;
+  }).join("");
 
   return `<!DOCTYPE html>
 <html lang="es">
@@ -312,25 +344,43 @@ body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica
 .hero h1{font-size:26px;font-weight:900;color:#fff;letter-spacing:2px}
 .hero h2{font-size:13px;color:#c9a84c;letter-spacing:4px;margin-top:4px}
 .updated{font-size:10px;color:rgba(255,255,255,.3);margin-top:6px;letter-spacing:1px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(480px,1fr));gap:20px;max-width:1200px;margin:20px auto;padding:0 16px}
-.group-block{background:#0d1e3a;border:1px solid rgba(201,168,76,.25);border-radius:10px;overflow:hidden}
-.group-title{background:#c9a84c;color:#07111f;font-size:14px;font-weight:900;letter-spacing:3px;padding:8px 14px;text-align:center}
-.standings-table{width:100%;border-collapse:collapse;font-size:12px}
+.select-wrap{max-width:600px;margin:18px auto 0;padding:0 16px}
+.group-select{width:100%;padding:13px 14px;background:#0d1e3a;border:1px solid rgba(201,168,76,.4);
+  border-radius:8px;color:#c9a84c;font-size:13px;font-weight:800;letter-spacing:1px;
+  -webkit-appearance:none;appearance:none;cursor:pointer;font-family:inherit}
+.group-select option{background:#0d1e3a;color:#fff}
+.container{max-width:600px;margin:16px auto 0;padding:0 16px}
+.standings-table{width:100%;border-collapse:collapse;font-size:12px;background:#0d1e3a;border-radius:10px 10px 0 0;overflow:hidden;border:1px solid rgba(201,168,76,.25)}
 .standings-table th{background:rgba(201,168,76,.12);color:rgba(201,168,76,.8);font-size:10px;letter-spacing:1px;padding:6px 6px;text-align:center;border-bottom:1px solid rgba(201,168,76,.2)}
 .standings-table td{padding:7px 6px;text-align:center;border-bottom:1px solid rgba(255,255,255,.05)}
-.t-team{text-align:left!important;padding-left:10px!important;min-width:130px;font-weight:600}
+.t-team{text-align:left!important;padding-left:10px!important;min-width:110px;font-weight:600}
 .t-pts{font-weight:900;color:#c9a84c!important;font-size:14px!important}
-.t-player{text-align:left!important;font-size:11px;color:rgba(255,255,255,.6);min-width:120px}
+.t-player{text-align:left!important;font-size:11px;color:rgba(255,255,255,.6);min-width:100px}
 .flag{margin-right:5px}
 .pos{color:#4ade80;font-weight:700}
 .neg{color:#f87171;font-weight:700}
 .row:hover td{background:rgba(201,168,76,.06)}
-.qualify td{border-left:2px solid transparent}
 .first td{border-left:2px solid #ffd700}
 .second td{border-left:2px solid rgba(255,215,0,.4)}
 .console-dot{font-size:8px;font-weight:800;padding:1px 4px;border-radius:3px;margin-right:4px;font-family:monospace;color:#fff}
+.matches-section{background:#0a1628;border:1px solid rgba(201,168,76,.15);border-top:none;border-radius:0 0 10px 10px;padding:4px 0 8px}
+.matches-title{font-size:10px;letter-spacing:2px;color:rgba(201,168,76,.6);font-weight:800;text-align:center;padding:10px 0 6px}
+.match-row{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.04)}
+.match-row:last-child{border-bottom:none}
+.match-meta{display:block;font-size:9px;color:rgba(255,255,255,.3);letter-spacing:1px;margin-bottom:4px}
+.match-line{display:flex;align-items:center;gap:8px}
+.match-team{flex:1;display:flex;flex-direction:column;gap:1px}
+.match-team.right{align-items:flex-end;text-align:right}
+.match-team-name{font-size:13px;font-weight:700}
+.match-player{font-size:10px;color:#c9a84c}
+.match-score{flex-shrink:0;min-width:54px;text-align:center;font-size:16px;font-weight:900;color:#fff;
+  background:rgba(255,255,255,.04);border-radius:6px;padding:4px 6px}
+.match-score.tbd{color:rgba(255,255,255,.25);font-size:11px;font-weight:700}
+.pending-badge{margin-top:6px;font-size:9px;letter-spacing:1px;color:#f5c542;background:rgba(245,197,66,.1);
+  border:1px solid rgba(245,197,66,.25);border-radius:4px;padding:3px 6px;text-align:center;font-weight:800}
+.match-row.played .match-score{background:rgba(74,222,128,.12);color:#4ade80}
 .footer{text-align:center;color:rgba(255,255,255,.15);font-size:10px;margin-top:24px;letter-spacing:1px}
-@media(max-width:520px){.grid{grid-template-columns:1fr}.t-player{display:none}}
+.note{max-width:600px;margin:14px auto 0;padding:0 16px;font-size:10px;color:rgba(255,255,255,.3);text-align:center;line-height:1.6}
 </style>
 </head>
 <body>
@@ -340,8 +390,21 @@ body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica
   <h2>TABLA DE POSICIONES</h2>
   <div class="updated">Actualizado: ${new Date().toLocaleString("es-MX")}</div>
 </div>
-<div class="grid">${groupsHTML}</div>
+<div class="select-wrap">
+  <select class="group-select" id="groupSelect" onchange="showGroup(this.value)">
+    ${options}
+  </select>
+</div>
+<div class="container">${panelsHTML}</div>
+<div class="note">¿Ves un error o falta un resultado? Avísale a los administradores del torneo para corregirlo.</div>
 <div class="footer">Criterios FIFA: PTS → DIF → GF → H2H PTS → H2H DIF → H2H GF</div>
+<script>
+function showGroup(gk) {
+  document.querySelectorAll(".group-panel").forEach(p => p.style.display = "none");
+  const el = document.getElementById("group-" + gk);
+  if (el) el.style.display = "block";
+}
+</script>
 </body>
 </html>`;
 }

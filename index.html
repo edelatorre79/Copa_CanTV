@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>3ra Copa CANTV — FIFA World Cup 2026</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica,Arial,sans-serif;
+  min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{width:100%;max-width:380px;background:#0d1e3a;border:1px solid rgba(201,168,76,.25);border-radius:14px;padding:28px}
+.kicker{font-size:10px;letter-spacing:4px;color:rgba(201,168,76,.65);text-align:center;margin-bottom:6px}
+h1{font-size:24px;font-weight:900;letter-spacing:2px;text-align:center}
+.sub{font-size:12px;color:#c9a84c;letter-spacing:3px;text-align:center;margin-top:4px;margin-bottom:24px}
+.link{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:10px;
+  text-decoration:none;margin-bottom:10px;border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.03);transition:background .2s}
+.link:hover{background:rgba(201,168,76,.08)}
+.link .icon{font-size:22px;flex-shrink:0}
+.link .text{flex:1}
+.link .title{font-size:14px;font-weight:800;color:#fff;letter-spacing:1px}
+.link .desc{font-size:10px;color:rgba(255,255,255,.4);margin-top:2px;letter-spacing:.5px}
+.link .badge{font-size:9px;font-weight:800;letter-spacing:1px;padding:3px 7px;border-radius:4px;flex-shrink:0}
+.badge-ok{background:rgba(74,222,128,.15);color:#4ade80}
+.badge-pending{background:rgba(245,197,66,.12);color:#f5c542}
+.link.editor{border-color:rgba(201,168,76,.35)}
+.link.editor .title{color:#c9a84c}
+.link.disabled{opacity:.4;pointer-events:none}
+.footer{text-align:center;font-size:9px;color:rgba(255,255,255,.2);margin-top:16px;letter-spacing:1px}
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="kicker">FIFA WORLD CUP 2026 · USA · CAN · MEX</div>
+  <h1>3RA COPA CANTV</h1>
+  <div class="sub">SELECCIONA UNA OPCIÓN</div>
+
+  <a class="link editor" href="editor.html">
+    <span class="icon">🛠️</span>
+    <div class="text">
+      <div class="title">EDITOR DE RESULTADOS</div>
+      <div class="desc">Solo administradores · requiere token de GitHub</div>
+    </div>
+  </a>
+
+  <a class="link" id="link-results" href="results.html">
+    <span class="icon">📊</span>
+    <div class="text">
+      <div class="title">POSICIONES</div>
+      <div class="desc">Tabla de grupos y resultados capturados</div>
+    </div>
+    <span class="badge badge-pending" id="badge-results">...</span>
+  </a>
+
+  <a class="link" id="link-playoffs" href="playoffs.html">
+    <span class="icon">🏆</span>
+    <div class="text">
+      <div class="title">OCTAVOS DE FINAL</div>
+      <div class="desc">Proyección del cuadro eliminatorio</div>
+    </div>
+    <span class="badge badge-pending" id="badge-playoffs">...</span>
+  </a>
+
+  <div class="footer">3RA COPA CANTV · GRUPOS OFICIALES FIFA WORLD CUP 2026</div>
+</div>
+
+<script>
+async function checkLink(path, linkId, badgeId) {
+  const link = document.getElementById(linkId);
+  const badge = document.getElementById(badgeId);
+  try {
+    const res = await fetch(path, { method: "HEAD", cache: "no-store" });
+    if (res.ok) {
+      badge.textContent = "DISPONIBLE";
+      badge.className = "badge badge-ok";
+    } else {
+      throw new Error("not found");
+    }
+  } catch (e) {
+    badge.textContent = "AÚN NO PUBLICADO";
+    badge.className = "badge badge-pending";
+    link.classList.add("disabled");
+    link.removeAttribute("href");
+  }
+}
+checkLink("results.html", "link-results", "badge-results");
+checkLink("playoffs.html", "link-playoffs", "badge-playoffs");
+</script>
+</body>
+</html>
