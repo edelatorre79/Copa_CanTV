@@ -22,14 +22,16 @@ body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica
 .standings-table td{padding:7px 6px;text-align:center;border-bottom:1px solid rgba(255,255,255,.05)}
 .t-team{text-align:left!important;padding-left:10px!important;min-width:110px;font-weight:600}
 .t-pts{font-weight:900;color:#c9a84c!important;font-size:14px!important}
-.t-player{text-align:left!important;font-size:11px;color:rgba(255,255,255,.6);min-width:100px}
+.t-player{text-align:left!important;font-size:11px;color:rgba(255,255,255,.6);min-width:110px}
+.t-player .player-name{display:block;font-weight:700;color:#fff;margin-top:2px}
+.t-player .player-tag{display:block;font-size:9px;color:rgba(255,255,255,.35);font-family:monospace;margin-top:1px}
 .flag{margin-right:5px}
 .pos{color:#4ade80;font-weight:700}
 .neg{color:#f87171;font-weight:700}
 .row:hover td{background:rgba(201,168,76,.06)}
 .first td{border-left:2px solid #ffd700}
 .second td{border-left:2px solid rgba(255,215,0,.4)}
-.console-dot{font-size:8px;font-weight:800;padding:1px 4px;border-radius:3px;margin-right:4px;font-family:monospace;color:#fff}
+.console-dot{font-size:8px;font-weight:800;padding:1px 4px;border-radius:3px;font-family:monospace;color:#fff;display:inline-block}
 .matches-section{background:#0a1628;border:1px solid rgba(201,168,76,.15);border-top:none;border-radius:0 0 10px 10px;padding:4px 0 8px}
 .matches-title{font-size:10px;letter-spacing:2px;color:rgba(201,168,76,.6);font-weight:800;text-align:center;padding:10px 0 6px}
 .match-row{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.04)}
@@ -40,6 +42,7 @@ body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica
 .match-team.right{align-items:flex-end;text-align:right}
 .match-team-name{font-size:13px;font-weight:700}
 .match-player{font-size:10px;color:#c9a84c}
+.match-tag{color:rgba(255,255,255,.35);font-family:monospace;font-size:9px}
 .match-score{flex-shrink:0;min-width:54px;text-align:center;font-size:16px;font-weight:900;
   background:rgba(74,222,128,.12);color:#4ade80;border-radius:6px;padding:4px 6px}
 .empty-matches{padding:18px 12px;text-align:center;font-size:11px;color:rgba(255,255,255,.3);line-height:1.6}
@@ -53,7 +56,7 @@ body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica
   <div style="font-size:11px;letter-spacing:3px;color:rgba(201,168,76,.7);margin-bottom:4px">FIFA WORLD CUP 2026</div>
   <h1>3RA COPA CANTV</h1>
   <h2>TABLA DE POSICIONES</h2>
-  <div class="updated">Actualizado: 15/6/2026, 6:28:53 a.m.</div>
+  <div class="updated">Actualizado: 15/6/2026, 6:36:23 a.m.</div>
 </div>
 <div class="select-wrap">
   <select class="group-select" id="groupSelect" onchange="showGroup(this.value)">
@@ -75,28 +78,28 @@ body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica
         <td>3</td><td>1</td>
         <td class="pos">+2</td>
         <td class="t-pts">4</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>CIRO</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">CIRO</span><span class="player-tag">@Ciro_26A</span></td>
       </tr><tr class="row second">
         <td class="t-team"><span class="flag">🇰🇷</span>Corea del Sur</td>
         <td>2</td><td>1</td><td>1</td><td>0</td>
         <td>3</td><td>2</td>
         <td class="pos">+1</td>
         <td class="t-pts">4</td>
-        <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span>ROGER</td>
+        <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span><span class="player-name">ROGER</span><span class="player-tag">@siempreyowin</span></td>
       </tr><tr class="row ">
         <td class="t-team"><span class="flag">🇨🇿</span>Rep. Checa</td>
         <td>1</td><td>0</td><td>0</td><td>1</td>
         <td>1</td><td>2</td>
         <td class="neg">-1</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span>MATEO</td>
+        <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span><span class="player-name">MATEO</span><span class="player-tag">@MrGuillO1927</span></td>
       </tr><tr class="row ">
         <td class="t-team"><span class="flag">🇿🇦</span>Sudáfrica</td>
         <td>1</td><td>0</td><td>0</td><td>1</td>
         <td>0</td><td>2</td>
         <td class="neg">-2</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>ADRIÁN</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">ADRIÁN</span><span class="player-tag">@wasapeo0609</span></td>
       </tr></tbody>
       </table>
       <div class="matches-section">
@@ -106,11 +109,11 @@ body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica
           <div class="match-line">
             <div class="match-team">
               <span class="match-team-name">🇲🇽 México</span>
-              <span class="match-player">CIRO</span>
+              <span class="match-player">CIRO <span class="match-tag">@Ciro_26A</span></span>
             </div>
             <div class="match-score">2 - 0</div>
             <div class="match-team right">
-              <span class="match-player">ADRIÁN</span>
+              <span class="match-player"><span class="match-tag">@wasapeo0609</span> ADRIÁN</span>
               <span class="match-team-name">Sudáfrica 🇿🇦</span>
             </div>
           </div>
@@ -119,11 +122,11 @@ body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica
           <div class="match-line">
             <div class="match-team">
               <span class="match-team-name">🇰🇷 Corea del Sur</span>
-              <span class="match-player">ROGER</span>
+              <span class="match-player">ROGER <span class="match-tag">@siempreyowin</span></span>
             </div>
             <div class="match-score">2 - 1</div>
             <div class="match-team right">
-              <span class="match-player">MATEO</span>
+              <span class="match-player"><span class="match-tag">@MrGuillO1927</span> MATEO</span>
               <span class="match-team-name">Rep. Checa 🇨🇿</span>
             </div>
           </div>
@@ -132,11 +135,11 @@ body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica
           <div class="match-line">
             <div class="match-team">
               <span class="match-team-name">🇲🇽 México</span>
-              <span class="match-player">CIRO</span>
+              <span class="match-player">CIRO <span class="match-tag">@Ciro_26A</span></span>
             </div>
             <div class="match-score">1 - 1</div>
             <div class="match-team right">
-              <span class="match-player">ROGER</span>
+              <span class="match-player"><span class="match-tag">@siempreyowin</span> ROGER</span>
               <span class="match-team-name">Corea del Sur 🇰🇷</span>
             </div>
           </div>
@@ -157,28 +160,28 @@ body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>JOSSUA</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">JOSSUA</span><span class="player-tag">@JossuaElCrack</span></td>
       </tr><tr class="row second">
         <td class="t-team"><span class="flag">🇨🇦</span>Canadá</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>RAFAEL</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">RAFAEL</span><span class="player-tag">@karmados</span></td>
       </tr><tr class="row ">
         <td class="t-team"><span class="flag">🇶🇦</span>Qatar</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>MATÍAS</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">MATÍAS</span><span class="player-tag">@Mati152014</span></td>
       </tr><tr class="row ">
         <td class="t-team"><span class="flag">🇨🇭</span>Suiza</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span>JESUS</td>
+        <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span><span class="player-name">JESUS</span><span class="player-tag">@jesus20124125</span></td>
       </tr></tbody>
       </table>
       <div class="matches-section">
@@ -200,28 +203,28 @@ body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>ELIO</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">ELIO</span><span class="player-tag">@FCBLegends_Vzla</span></td>
       </tr><tr class="row second">
         <td class="t-team"><span class="flag">🏴󠁧󠁢󠁳󠁣󠁴󠁿</span>Escocia</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>BENJAMIN</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">BENJAMIN</span><span class="player-tag">@Zentrakk</span></td>
       </tr><tr class="row ">
         <td class="t-team"><span class="flag">🇭🇹</span>Haití</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>RAFAEL</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">RAFAEL</span><span class="player-tag">@karmados</span></td>
       </tr><tr class="row ">
         <td class="t-team"><span class="flag">🇲🇦</span>Marruecos</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>ADRIÁN</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">ADRIÁN</span><span class="player-tag">@wasapeo0609</span></td>
       </tr></tbody>
       </table>
       <div class="matches-section">
@@ -243,28 +246,28 @@ body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>JOSSUA</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">JOSSUA</span><span class="player-tag">@JossuaElCrack</span></td>
       </tr><tr class="row second">
         <td class="t-team"><span class="flag">🇺🇸</span>EE.UU.</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span>JESUS</td>
+        <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span><span class="player-name">JESUS</span><span class="player-tag">@jesus20124125</span></td>
       </tr><tr class="row ">
         <td class="t-team"><span class="flag">🇵🇾</span>Paraguay</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>ELIO</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">ELIO</span><span class="player-tag">@FCBLegends_Vzla</span></td>
       </tr><tr class="row ">
         <td class="t-team"><span class="flag">🇹🇷</span>Turquía</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>JABY</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">JABY</span><span class="player-tag">@Jabyher225</span></td>
       </tr></tbody>
       </table>
       <div class="matches-section">
@@ -286,28 +289,28 @@ body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#555555">N/A</span>JONATHAN</td>
+        <td class="t-player"><span class="console-dot" style="background:#555555">N/A</span><span class="player-name">JONATHAN</span><span class="player-tag">@guaricho147</span></td>
       </tr><tr class="row second">
         <td class="t-team"><span class="flag">🇨🇮</span>Costa de Marfil</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#555555">N/A</span>JOSTHYN</td>
+        <td class="t-player"><span class="console-dot" style="background:#555555">N/A</span><span class="player-name">JOSTHYN</span><span class="player-tag">@josthyn__20</span></td>
       </tr><tr class="row ">
         <td class="t-team"><span class="flag">🇨🇼</span>Curazao</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span>ROGER</td>
+        <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span><span class="player-name">ROGER</span><span class="player-tag">@siempreyowin</span></td>
       </tr><tr class="row ">
         <td class="t-team"><span class="flag">🇪🇨</span>Ecuador</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span>MATEO</td>
+        <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span><span class="player-name">MATEO</span><span class="player-tag">@MrGuillO1927</span></td>
       </tr></tbody>
       </table>
       <div class="matches-section">
@@ -329,28 +332,28 @@ body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span>MATEO</td>
+        <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span><span class="player-name">MATEO</span><span class="player-tag">@MrGuillO1927</span></td>
       </tr><tr class="row second">
         <td class="t-team"><span class="flag">🇳🇱</span>Países Bajos</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>MATÍAS</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">MATÍAS</span><span class="player-tag">@Mati152014</span></td>
       </tr><tr class="row ">
         <td class="t-team"><span class="flag">🇸🇪</span>Suecia</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>EDUARDO</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">EDUARDO</span><span class="player-tag">@YOnL3nn0n</span></td>
       </tr><tr class="row ">
         <td class="t-team"><span class="flag">🇹🇳</span>Túnez</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#555555">N/A</span>JONATHAN</td>
+        <td class="t-player"><span class="console-dot" style="background:#555555">N/A</span><span class="player-name">JONATHAN</span><span class="player-tag">@guaricho147</span></td>
       </tr></tbody>
       </table>
       <div class="matches-section">
@@ -372,28 +375,28 @@ body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span>ROGER</td>
+        <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span><span class="player-name">ROGER</span><span class="player-tag">@siempreyowin</span></td>
       </tr><tr class="row second">
         <td class="t-team"><span class="flag">🇪🇬</span>Egipto</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#555555">N/A</span>JONATHAN</td>
+        <td class="t-player"><span class="console-dot" style="background:#555555">N/A</span><span class="player-name">JONATHAN</span><span class="player-tag">@guaricho147</span></td>
       </tr><tr class="row ">
         <td class="t-team"><span class="flag">🇮🇷</span>Irán</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#333333">PC</span>JAVIER</td>
+        <td class="t-player"><span class="console-dot" style="background:#333333">PC</span><span class="player-name">JAVIER</span><span class="player-tag">@Javi-257</span></td>
       </tr><tr class="row ">
         <td class="t-team"><span class="flag">🇳🇿</span>Nueva Zelanda</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>JABY</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">JABY</span><span class="player-tag">@Jabyher225</span></td>
       </tr></tbody>
       </table>
       <div class="matches-section">
@@ -415,28 +418,28 @@ body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica
         <td>3</td><td>0</td>
         <td class="pos">+3</td>
         <td class="t-pts">3</td>
-        <td class="t-player"><span class="console-dot" style="background:#333333">PC</span>JAVIER</td>
+        <td class="t-player"><span class="console-dot" style="background:#333333">PC</span><span class="player-name">JAVIER</span><span class="player-tag">@Javi-257</span></td>
       </tr><tr class="row second">
         <td class="t-team"><span class="flag">🇺🇾</span>Uruguay</td>
         <td>1</td><td>1</td><td>0</td><td>0</td>
         <td>2</td><td>1</td>
         <td class="pos">+1</td>
         <td class="t-pts">3</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>JOSSUA</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">JOSSUA</span><span class="player-tag">@JossuaElCrack</span></td>
       </tr><tr class="row ">
         <td class="t-team"><span class="flag">🇸🇦</span>Arabia Saudita</td>
         <td>1</td><td>0</td><td>0</td><td>1</td>
         <td>1</td><td>2</td>
         <td class="neg">-1</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>GABRIEL</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">GABRIEL</span><span class="player-tag">@Albornozg14</span></td>
       </tr><tr class="row ">
         <td class="t-team"><span class="flag">🇨🇻</span>Cabo Verde</td>
         <td>1</td><td>0</td><td>0</td><td>1</td>
         <td>0</td><td>3</td>
         <td class="neg">-3</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>EDUARDO</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">EDUARDO</span><span class="player-tag">@YOnL3nn0n</span></td>
       </tr></tbody>
       </table>
       <div class="matches-section">
@@ -446,11 +449,11 @@ body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica
           <div class="match-line">
             <div class="match-team">
               <span class="match-team-name">🇪🇸 España</span>
-              <span class="match-player">JAVIER</span>
+              <span class="match-player">JAVIER <span class="match-tag">@Javi-257</span></span>
             </div>
             <div class="match-score">3 - 0</div>
             <div class="match-team right">
-              <span class="match-player">EDUARDO</span>
+              <span class="match-player"><span class="match-tag">@YOnL3nn0n</span> EDUARDO</span>
               <span class="match-team-name">Cabo Verde 🇨🇻</span>
             </div>
           </div>
@@ -459,11 +462,11 @@ body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica
           <div class="match-line">
             <div class="match-team">
               <span class="match-team-name">🇸🇦 Arabia Saudita</span>
-              <span class="match-player">GABRIEL</span>
+              <span class="match-player">GABRIEL <span class="match-tag">@Albornozg14</span></span>
             </div>
             <div class="match-score">1 - 2</div>
             <div class="match-team right">
-              <span class="match-player">JOSSUA</span>
+              <span class="match-player"><span class="match-tag">@JossuaElCrack</span> JOSSUA</span>
               <span class="match-team-name">Uruguay 🇺🇾</span>
             </div>
           </div>
@@ -484,28 +487,28 @@ body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>BENJAMIN</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">BENJAMIN</span><span class="player-tag">@Zentrakk</span></td>
       </tr><tr class="row second">
         <td class="t-team"><span class="flag">🇮🇶</span>Irak</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#333333">PC</span>JAVIER</td>
+        <td class="t-player"><span class="console-dot" style="background:#333333">PC</span><span class="player-name">JAVIER</span><span class="player-tag">@Javi-257</span></td>
       </tr><tr class="row ">
         <td class="t-team"><span class="flag">🇳🇴</span>Noruega</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>GABRIEL</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">GABRIEL</span><span class="player-tag">@Albornozg14</span></td>
       </tr><tr class="row ">
         <td class="t-team"><span class="flag">🇸🇳</span>Senegal</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>CIRO</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">CIRO</span><span class="player-tag">@Ciro_26A</span></td>
       </tr></tbody>
       </table>
       <div class="matches-section">
@@ -527,28 +530,28 @@ body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>ELIO</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">ELIO</span><span class="player-tag">@FCBLegends_Vzla</span></td>
       </tr><tr class="row second">
         <td class="t-team"><span class="flag">🇦🇷</span>Argentina</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>RAFAEL</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">RAFAEL</span><span class="player-tag">@karmados</span></td>
       </tr><tr class="row ">
         <td class="t-team"><span class="flag">🇦🇹</span>Austria</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#555555">N/A</span>JOSTHYN</td>
+        <td class="t-player"><span class="console-dot" style="background:#555555">N/A</span><span class="player-name">JOSTHYN</span><span class="player-tag">@josthyn__20</span></td>
       </tr><tr class="row ">
         <td class="t-team"><span class="flag">🇯🇴</span>Jordania</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span>JESUS</td>
+        <td class="t-player"><span class="console-dot" style="background:#107C10">XBOX</span><span class="player-name">JESUS</span><span class="player-tag">@jesus20124125</span></td>
       </tr></tbody>
       </table>
       <div class="matches-section">
@@ -570,28 +573,28 @@ body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>JABY</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">JABY</span><span class="player-tag">@Jabyher225</span></td>
       </tr><tr class="row second">
         <td class="t-team"><span class="flag">🇨🇩</span>Congo DR</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>CIRO</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">CIRO</span><span class="player-tag">@Ciro_26A</span></td>
       </tr><tr class="row ">
         <td class="t-team"><span class="flag">🇵🇹</span>Portugal</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>GABRIEL</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">GABRIEL</span><span class="player-tag">@Albornozg14</span></td>
       </tr><tr class="row ">
         <td class="t-team"><span class="flag">🇺🇿</span>Uzbekistán</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>MATÍAS</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">MATÍAS</span><span class="player-tag">@Mati152014</span></td>
       </tr></tbody>
       </table>
       <div class="matches-section">
@@ -613,28 +616,28 @@ body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#555555">N/A</span>JOSTHYN</td>
+        <td class="t-player"><span class="console-dot" style="background:#555555">N/A</span><span class="player-name">JOSTHYN</span><span class="player-tag">@josthyn__20</span></td>
       </tr><tr class="row second">
         <td class="t-team"><span class="flag">🇬🇭</span>Ghana</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>ADRIÁN</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">ADRIÁN</span><span class="player-tag">@wasapeo0609</span></td>
       </tr><tr class="row ">
         <td class="t-team"><span class="flag">🏴󠁧󠁢󠁥󠁮󠁧󠁿</span>Inglaterra</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>EDUARDO</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">EDUARDO</span><span class="player-tag">@YOnL3nn0n</span></td>
       </tr><tr class="row ">
         <td class="t-team"><span class="flag">🇵🇦</span>Panamá</td>
         <td>0</td><td>0</td><td>0</td><td>0</td>
         <td>0</td><td>0</td>
         <td class="">0</td>
         <td class="t-pts">0</td>
-        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span>BENJAMIN</td>
+        <td class="t-player"><span class="console-dot" style="background:#003087">PS5</span><span class="player-name">BENJAMIN</span><span class="player-tag">@Zentrakk</span></td>
       </tr></tbody>
       </table>
       <div class="matches-section">

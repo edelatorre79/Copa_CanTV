@@ -283,7 +283,7 @@ function generateStandingsHTML(allResults) {
         <td>${s.gf}</td><td>${s.gc}</td>
         <td class="${s.gf-s.gc>0?"pos":s.gf-s.gc<0?"neg":""}">${s.gf-s.gc>0?"+":""}${s.gf-s.gc}</td>
         <td class="t-pts">${s.pts}</td>
-        <td class="t-player">${p?`<span class="console-dot" style="background:${p.bg}">${p.console}</span>${p.name}`:"-"}</td>
+        <td class="t-player">${p?`<span class="console-dot" style="background:${p.bg}">${p.console}</span><span class="player-name">${p.name}</span><span class="player-tag">${p.tag}</span>`:"-"}</td>
       </tr>`;
     }).join("");
 
@@ -297,11 +297,11 @@ function generateStandingsHTML(allResults) {
           <div class="match-line">
             <div class="match-team">
               <span class="match-team-name">${FLAGS[m.t1]||""} ${m.t1}</span>
-              ${p1?`<span class="match-player">${p1.name}</span>`:""}
+              ${p1?`<span class="match-player">${p1.name} <span class="match-tag">${p1.tag}</span></span>`:""}
             </div>
             <div class="match-score">${m.g1} - ${m.g2}</div>
             <div class="match-team right">
-              ${p2?`<span class="match-player">${p2.name}</span>`:""}
+              ${p2?`<span class="match-player"><span class="match-tag">${p2.tag}</span> ${p2.name}</span>`:""}
               <span class="match-team-name">${m.t2} ${FLAGS[m.t2]||""}</span>
             </div>
           </div>
@@ -357,14 +357,16 @@ body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica
 .standings-table td{padding:7px 6px;text-align:center;border-bottom:1px solid rgba(255,255,255,.05)}
 .t-team{text-align:left!important;padding-left:10px!important;min-width:110px;font-weight:600}
 .t-pts{font-weight:900;color:#c9a84c!important;font-size:14px!important}
-.t-player{text-align:left!important;font-size:11px;color:rgba(255,255,255,.6);min-width:100px}
+.t-player{text-align:left!important;font-size:11px;color:rgba(255,255,255,.6);min-width:110px}
+.t-player .player-name{display:block;font-weight:700;color:#fff;margin-top:2px}
+.t-player .player-tag{display:block;font-size:9px;color:rgba(255,255,255,.35);font-family:monospace;margin-top:1px}
 .flag{margin-right:5px}
 .pos{color:#4ade80;font-weight:700}
 .neg{color:#f87171;font-weight:700}
 .row:hover td{background:rgba(201,168,76,.06)}
 .first td{border-left:2px solid #ffd700}
 .second td{border-left:2px solid rgba(255,215,0,.4)}
-.console-dot{font-size:8px;font-weight:800;padding:1px 4px;border-radius:3px;margin-right:4px;font-family:monospace;color:#fff}
+.console-dot{font-size:8px;font-weight:800;padding:1px 4px;border-radius:3px;font-family:monospace;color:#fff;display:inline-block}
 .matches-section{background:#0a1628;border:1px solid rgba(201,168,76,.15);border-top:none;border-radius:0 0 10px 10px;padding:4px 0 8px}
 .matches-title{font-size:10px;letter-spacing:2px;color:rgba(201,168,76,.6);font-weight:800;text-align:center;padding:10px 0 6px}
 .match-row{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.04)}
@@ -375,6 +377,7 @@ body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica
 .match-team.right{align-items:flex-end;text-align:right}
 .match-team-name{font-size:13px;font-weight:700}
 .match-player{font-size:10px;color:#c9a84c}
+.match-tag{color:rgba(255,255,255,.35);font-family:monospace;font-size:9px}
 .match-score{flex-shrink:0;min-width:54px;text-align:center;font-size:16px;font-weight:900;
   background:rgba(74,222,128,.12);color:#4ade80;border-radius:6px;padding:4px 6px}
 .empty-matches{padding:18px 12px;text-align:center;font-size:11px;color:rgba(255,255,255,.3);line-height:1.6}
