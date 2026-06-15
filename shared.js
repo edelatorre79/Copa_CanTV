@@ -287,26 +287,28 @@ function generateStandingsHTML(allResults) {
       </tr>`;
     }).join("");
 
-    const matchRows = mapped.map((m,i) => {
-      const jornada = i<2 ? 1 : i<4 ? 2 : 3;
-      const hasResult = m.g1!=="" && m.g2!=="";
-      const p1 = PLAYERS[m.t1], p2 = PLAYERS[m.t2];
-      return `<div class="match-row ${hasResult?"played":"pending"}">
-        <span class="match-meta">J${jornada} · ${m.date}</span>
-        <div class="match-line">
-          <div class="match-team">
-            <span class="match-team-name">${FLAGS[m.t1]||""} ${m.t1}</span>
-            ${p1?`<span class="match-player">${p1.name}</span>`:""}
+    const matchRows = mapped
+      .map((m,i) => ({ ...m, jornada: i<2 ? 1 : i<4 ? 2 : 3 }))
+      .filter(m => m.g1!=="" && m.g2!=="")
+      .map(m => {
+        const p1 = PLAYERS[m.t1], p2 = PLAYERS[m.t2];
+        return `<div class="match-row played">
+          <span class="match-meta">J${m.jornada} · ${m.date}</span>
+          <div class="match-line">
+            <div class="match-team">
+              <span class="match-team-name">${FLAGS[m.t1]||""} ${m.t1}</span>
+              ${p1?`<span class="match-player">${p1.name}</span>`:""}
+            </div>
+            <div class="match-score">${m.g1} - ${m.g2}</div>
+            <div class="match-team right">
+              ${p2?`<span class="match-player">${p2.name}</span>`:""}
+              <span class="match-team-name">${m.t2} ${FLAGS[m.t2]||""}</span>
+            </div>
           </div>
-          <div class="match-score ${hasResult?"":"tbd"}">${hasResult?`${m.g1} - ${m.g2}`:"vs"}</div>
-          <div class="match-team right">
-            ${p2?`<span class="match-player">${p2.name}</span>`:""}
-            <span class="match-team-name">${m.t2} ${FLAGS[m.t2]||""}</span>
-          </div>
-        </div>
-        ${hasResult?"":'<div class="pending-badge">⏳ PENDIENTE DE CAPTURAR</div>'}
-      </div>`;
-    }).join("");
+        </div>`;
+      }).join("");
+
+    const matchesBody = matchRows || `<div class="empty-matches">Aún no hay resultados capturados para este grupo.</div>`;
 
     panelsHTML += `
     <div class="group-panel" id="group-${gk}" style="display:${idx===0?"block":"none"}">
@@ -321,7 +323,7 @@ function generateStandingsHTML(allResults) {
       </table>
       <div class="matches-section">
         <div class="matches-title">RESULTADOS CAPTURADOS — GRUPO ${gk}</div>
-        ${matchRows}
+        ${matchesBody}
       </div>
     </div>`;
   });
@@ -373,11 +375,9 @@ body{background:#07111f;color:#fff;font-family:-apple-system,system-ui,Helvetica
 .match-team.right{align-items:flex-end;text-align:right}
 .match-team-name{font-size:13px;font-weight:700}
 .match-player{font-size:10px;color:#c9a84c}
-.match-score{flex-shrink:0;min-width:54px;text-align:center;font-size:16px;font-weight:900;color:#fff;
-  background:rgba(255,255,255,.04);border-radius:6px;padding:4px 6px}
-.match-score.tbd{color:rgba(255,255,255,.25);font-size:11px;font-weight:700}
-.pending-badge{margin-top:6px;font-size:9px;letter-spacing:1px;color:#f5c542;background:rgba(245,197,66,.1);
-  border:1px solid rgba(245,197,66,.25);border-radius:4px;padding:3px 6px;text-align:center;font-weight:800}
+.match-score{flex-shrink:0;min-width:54px;text-align:center;font-size:16px;font-weight:900;
+  background:rgba(74,222,128,.12);color:#4ade80;border-radius:6px;padding:4px 6px}
+.empty-matches{padding:18px 12px;text-align:center;font-size:11px;color:rgba(255,255,255,.3);line-height:1.6}
 .match-row.played .match-score{background:rgba(74,222,128,.12);color:#4ade80}
 .footer{text-align:center;color:rgba(255,255,255,.15);font-size:10px;margin-top:24px;letter-spacing:1px}
 .note{max-width:600px;margin:14px auto 0;padding:0 16px;font-size:10px;color:rgba(255,255,255,.3);text-align:center;line-height:1.6}
