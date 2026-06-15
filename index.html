@@ -43,7 +43,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:2px;text-align:center}
     </div>
   </a>
 
-  <a class="link" id="link-results" href="results.html">
+  <a class="link" id="link-results" href="#">
     <span class="icon">📊</span>
     <div class="text">
       <div class="title">POSICIONES</div>
@@ -52,7 +52,7 @@ h1{font-size:24px;font-weight:900;letter-spacing:2px;text-align:center}
     <span class="badge badge-pending" id="badge-results">...</span>
   </a>
 
-  <a class="link" id="link-playoffs" href="playoffs.html">
+  <a class="link" id="link-playoffs" href="#">
     <span class="icon">🏆</span>
     <div class="text">
       <div class="title">OCTAVOS DE FINAL</div>
@@ -65,14 +65,20 @@ h1{font-size:24px;font-weight:900;letter-spacing:2px;text-align:center}
 </div>
 
 <script>
+// Parámetro de cache-busting: evita que el navegador o el CDN de GitHub
+// Pages muestren una versión vieja de results.html / playoffs.html
+const v = Date.now();
+
 async function checkLink(path, linkId, badgeId) {
   const link = document.getElementById(linkId);
   const badge = document.getElementById(badgeId);
+  const url = `${path}?v=${v}`;
   try {
-    const res = await fetch(path, { method: "HEAD", cache: "no-store" });
+    const res = await fetch(url, { method: "HEAD", cache: "no-store" });
     if (res.ok) {
       badge.textContent = "DISPONIBLE";
       badge.className = "badge badge-ok";
+      link.href = url;
     } else {
       throw new Error("not found");
     }

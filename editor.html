@@ -110,7 +110,8 @@ function CopaCantv({ cfg, onReconfigure }) {
       await ghPutFile(cfg, "playoffs.html", bracketHTML, "Actualiza playoffs.html — Copa CANTV");
 
       const base = `https://${cfg.owner}.github.io/${cfg.repo}`;
-      setPublishedUrls({ results: `${base}/results.html`, playoffs: `${base}/playoffs.html` });
+      const v = Date.now();
+      setPublishedUrls({ results: `${base}/results.html?v=${v}`, playoffs: `${base}/playoffs.html?v=${v}` });
 
       setStatus("done");
       setStatusMsg("✓ Publicado — GitHub Pages tarda ~1 min en actualizar");
