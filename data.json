@@ -505,40 +505,40 @@
       "t1": "Portugal",
       "t2": "Congo DR",
       "date": "Jun 17",
-      "g1": "",
-      "g2": ""
+      "g1": "0",
+      "g2": "3"
     },
     {
       "id": "K2",
       "t1": "Uzbekistán",
       "t2": "Colombia",
       "date": "Jun 17",
-      "g1": "",
-      "g2": ""
+      "g1": "3",
+      "g2": "0"
     },
     {
       "id": "K3",
       "t1": "Portugal",
       "t2": "Uzbekistán",
       "date": "Jun 23",
-      "g1": "",
-      "g2": ""
+      "g1": "0",
+      "g2": "3"
     },
     {
       "id": "K4",
       "t1": "Colombia",
       "t2": "Congo DR",
       "date": "Jun 23",
-      "g1": "",
-      "g2": ""
+      "g1": "0",
+      "g2": "3"
     },
     {
       "id": "K5",
       "t1": "Colombia",
       "t2": "Portugal",
       "date": "Jun 27",
-      "g1": "",
-      "g2": ""
+      "g1": "0",
+      "g2": "0"
     },
     {
       "id": "K6",
