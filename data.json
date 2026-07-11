@@ -13,40 +13,40 @@
       "t1": "Corea del Sur",
       "t2": "Rep. Checa",
       "date": "Jun 11",
-      "g1": "",
-      "g2": ""
+      "g1": "0",
+      "g2": "0"
     },
     {
       "id": "A3",
       "t1": "Rep. Checa",
       "t2": "Sudáfrica",
       "date": "Jun 18",
-      "g1": "",
-      "g2": ""
+      "g1": "0",
+      "g2": "3"
     },
     {
       "id": "A4",
       "t1": "México",
       "t2": "Corea del Sur",
       "date": "Jun 18",
-      "g1": "",
-      "g2": ""
+      "g1": "3",
+      "g2": "0"
     },
     {
       "id": "A5",
       "t1": "México",
       "t2": "Rep. Checa",
       "date": "Jun 24",
-      "g1": "",
-      "g2": ""
+      "g1": "3",
+      "g2": "0"
     },
     {
       "id": "A6",
       "t1": "Corea del Sur",
       "t2": "Sudáfrica",
       "date": "Jun 24",
-      "g1": "",
-      "g2": ""
+      "g1": "0",
+      "g2": "3"
     }
   ],
   "B": [
