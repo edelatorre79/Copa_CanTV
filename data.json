@@ -205,16 +205,16 @@
       "t1": "Alemania",
       "t2": "Curazao",
       "date": "Jun 14",
-      "g1": "",
-      "g2": ""
+      "g1": "3",
+      "g2": "0"
     },
     {
       "id": "E2",
       "t1": "Costa de Marfil",
       "t2": "Ecuador",
       "date": "Jun 14",
-      "g1": "",
-      "g2": ""
+      "g1": "3",
+      "g2": "0"
     },
     {
       "id": "E3",
@@ -229,24 +229,24 @@
       "t1": "Ecuador",
       "t2": "Curazao",
       "date": "Jun 20",
-      "g1": "",
-      "g2": ""
+      "g1": "3",
+      "g2": "0"
     },
     {
       "id": "E5",
       "t1": "Ecuador",
       "t2": "Alemania",
       "date": "Jun 25",
-      "g1": "",
-      "g2": ""
+      "g1": "0",
+      "g2": "3"
     },
     {
       "id": "E6",
       "t1": "Curazao",
       "t2": "Costa de Marfil",
       "date": "Jun 25",
-      "g1": "",
-      "g2": ""
+      "g1": "0",
+      "g2": "3"
     }
   ],
   "F": [
