@@ -305,40 +305,40 @@
       "t1": "Bélgica",
       "t2": "Egipto",
       "date": "Jun 15",
-      "g1": "",
-      "g2": ""
+      "g1": "0",
+      "g2": "3"
     },
     {
       "id": "G2",
       "t1": "Irán",
       "t2": "Nueva Zelanda",
       "date": "Jun 15",
-      "g1": "",
-      "g2": ""
+      "g1": "3",
+      "g2": "0"
     },
     {
       "id": "G3",
       "t1": "Bélgica",
       "t2": "Irán",
       "date": "Jun 21",
-      "g1": "",
-      "g2": ""
+      "g1": "0",
+      "g2": "3"
     },
     {
       "id": "G4",
       "t1": "Nueva Zelanda",
       "t2": "Egipto",
       "date": "Jun 21",
-      "g1": "",
-      "g2": ""
+      "g1": "0",
+      "g2": "3"
     },
     {
       "id": "G5",
       "t1": "Nueva Zelanda",
       "t2": "Bélgica",
       "date": "Jun 26",
-      "g1": "",
-      "g2": ""
+      "g1": "0",
+      "g2": "0"
     },
     {
       "id": "G6",
