@@ -363,16 +363,16 @@
       "t1": "Arabia Saudita",
       "t2": "Uruguay",
       "date": "Jun 15",
-      "g1": "",
-      "g2": ""
+      "g1": "0",
+      "g2": "3"
     },
     {
       "id": "H3",
       "t1": "España",
       "t2": "Arabia Saudita",
       "date": "Jun 21",
-      "g1": "",
-      "g2": ""
+      "g1": "3",
+      "g2": "0"
     },
     {
       "id": "H4",
@@ -395,8 +395,8 @@
       "t1": "Cabo Verde",
       "t2": "Arabia Saudita",
       "date": "Jun 26",
-      "g1": "",
-      "g2": ""
+      "g1": "3",
+      "g2": "0"
     }
   ],
   "I": [
